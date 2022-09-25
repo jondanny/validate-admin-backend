@@ -2,6 +2,7 @@ import { DataSource } from 'typeorm';
 import path = require('path');
 import * as dotenv from 'dotenv';
 import { EnvHelper } from '@src/common/helpers/env.helper';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 dotenv.config({ path: EnvHelper.getEnvFilePath() });
 
@@ -19,6 +20,7 @@ export const AppDataSource = new DataSource({
   migrations: [path.join(__dirname, '../database/migrations/*')],
   charset: 'utf8mb4_unicode_ci',
   legacySpatialSupport: false,
+  namingStrategy: new SnakeNamingStrategy(),
   extra: {
     connectionLimit: process.env.MYSQL_CONNECTION_LIMIT || 200,
     waitForConnections: process.env.MYSQL_WAIT_FOR_CONNECTIONS === 'true',
