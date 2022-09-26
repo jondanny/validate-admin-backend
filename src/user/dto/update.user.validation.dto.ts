@@ -20,16 +20,4 @@ export class UpdateUserValidationDto {
   @IsPhoneNumber()
   @MaxLength(255)
   phoneNumber: string;
-
-  @ApiProperty({ example: '0xb794f5ea0ba39494ce839613fffba74279579268', required: true })
-  @IsOptional()
-  @IsEthereumAddress()
-  @MaxLength(255)
-  walletAddress: string;
-
-  @ApiProperty({ example: 2, required: true })
-  @Type(() => Number)
-  @IsOptional()
-  @IsInt()
-  ticketProviderId: number;
 }

@@ -4,7 +4,6 @@ import * as request from 'supertest';
 import { AppBootstrapManager } from '@src/app-bootstrap.manager';
 import { UserFactory } from '@src/database/factories/user.factory';
 import { AppDataSource } from '@src/config/datasource';
-import { identity } from 'rxjs';
 
 describe('User (e2e)', () => {
   let app: INestApplication;
@@ -31,7 +30,6 @@ describe('User (e2e)', () => {
       name: null,
       email: null,
       phoneNumber: null,
-      walletAddress: null,
       ticketProviderId: null,
     };
     await request(app.getHttpServer())
@@ -45,7 +43,6 @@ describe('User (e2e)', () => {
             'name must be shorter than or equal to 128 characters',
             'email must be shorter than or equal to 255 characters',
             'phoneNumber must be shorter than or equal to 255 characters',
-            'walletAddress must be shorter than or equal to 255 characters',
             'ticketProviderId must be an integer number',
           ]),
         );
@@ -53,12 +50,11 @@ describe('User (e2e)', () => {
       });
   });
 
-  test(`should post a user and get it back in response`, async () => {
+  it(`should post a user and get it back in response`, async () => {
     const userData = {
       name: 'My event 1',
       email: 'muaaz@gmail.com',
       phoneNumber: '+923214757374',
-      walletAddress: '0xb794f5ea0ba39494ce839613fffba74279579268',
       ticketProviderId: 1,
     };
 
@@ -77,7 +73,7 @@ describe('User (e2e)', () => {
       });
   });
 
-  test(`should get users by pagination`, async () => {
+  it(`should get users by pagination`, async () => {
     const user = await UserFactory.create();
     const user2 = await UserFactory.create();
     await request(app.getHttpServer())
@@ -116,11 +112,9 @@ describe('User (e2e)', () => {
       name: 'My event 1',
       email: 'muaaz@gmail.com',
       phoneNumber: '+923214757374',
-      walletAddress: '0xb794f5ea0ba39494ce839613fffba74279579268',
-      ticketProviderId: 1,
     };
     await request(app.getHttpServer())
-      .patch(`/api/v1/users/${user.id}`)
+      .patch(`/api/v1/users/${user.uuid}`)
       .send(updatedUser)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer test`)
@@ -135,10 +129,10 @@ describe('User (e2e)', () => {
       });
   });
 
-  test(`should get a user by id`, async () => {
+  it(`should get a user by id`, async () => {
     const user = await UserFactory.create();
     await request(app.getHttpServer())
-      .get(`/api/v1/users/${user.id}`)
+      .get(`/api/v1/users/${user.uuid}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer test`)
       .then((response) => {
@@ -151,18 +145,7 @@ describe('User (e2e)', () => {
       });
   });
 
-  test(`should give validation error on delete a user by id`, async () => {
-    await request(app.getHttpServer())
-      .delete(`/api/v1/users/test`)
-      .set('Accept', 'application/json')
-      .set('Authorization', `Bearer test`)
-      .then((response) => {
-        expect(response.body.message).toEqual('Validation failed (numeric string is expected)');
-        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-      });
-  });
-
-  test(`should delete a user by id`, async () => {
+  it(`should delete a user by id`, async () => {
     const user = await UserFactory.create();
     await request(app.getHttpServer())
       .delete(`/api/v1/users/${user.id}`)

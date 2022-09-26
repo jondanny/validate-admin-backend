@@ -1,14 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, Column, PrimaryGeneratedColumn, Generated, DeleteDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn } from 'typeorm';
 
 @Entity('user')
 export class User {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 
-  @ApiProperty({ description: 'Unique uid', maximum: 128 })
-  @Column({ type: 'varchar', nullable: false, length: 128 })
-  @Generated('uuid')
+  @ApiProperty({ description: 'Unique uid', maximum: 36 })
+  @Column({ type: 'varchar', nullable: false, length: 36 })
   uuid: string;
 
   @ApiProperty({ description: 'Name', maximum: 128, required: false })
@@ -23,8 +22,8 @@ export class User {
   @Column({ type: 'varchar', nullable: false, length: 255 })
   phoneNumber: string;
 
-  @ApiProperty({ description: 'Crypto wallet address', maximum: 255, required: true })
-  @Column({ type: 'varchar', nullable: false, length: 255 })
+  @ApiProperty({ description: 'Crypto wallet address', maximum: 255, required: false })
+  @Column({ type: 'varchar', nullable: true, length: 255 })
   walletAddress: string;
 
   @ApiProperty({ description: 'Ticket Provider id', required: true })

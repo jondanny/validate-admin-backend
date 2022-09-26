@@ -16,9 +16,9 @@ export class UserService {
     return this.userRepository.findOne({ where: { id: user.id } });
   }
 
-  async update(id: number, updateUserDto: UpdateUserValidationDto) {
-    await this.userRepository.update(id, updateUserDto);
-    const user = await this.findById(id);
+  async update(uuid: string, updateUserDto: UpdateUserValidationDto) {
+    await this.userRepository.update({ uuid: uuid }, updateUserDto);
+    const user = await this.findByUid(uuid);
 
     return user;
   }
@@ -27,13 +27,13 @@ export class UserService {
     return this.userRepository.getPaginatedQueryBuilder(searchParams);
   }
 
-  async remove(id: number) {
-    await this.userRepository.softDelete(id);
+  async remove(uuid: string) {
+    await this.userRepository.softDelete({ uuid });
 
     return;
   }
 
-  async findById(id: number): Promise<User> {
-    return this.userRepository.findOne({ where: { id } });
+  async findByUid(uuid: string): Promise<User> {
+    return this.userRepository.findOne({ where: { uuid } });
   }
 }

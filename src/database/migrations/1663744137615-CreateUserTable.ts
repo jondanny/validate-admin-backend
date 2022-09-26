@@ -46,7 +46,7 @@ export class CreateUserTable1663744137615 implements MigrationInterface {
           {
             name: 'wallet_address',
             type: 'varchar',
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: 'created_at',

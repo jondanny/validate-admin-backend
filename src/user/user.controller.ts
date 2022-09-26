@@ -13,25 +13,6 @@ export class UserController {
 
   @ApiOperation({ description: `Create a new user` })
   @ApiResponse(ApiResponseHelper.success(Event, HttpStatus.CREATED))
-  @ApiResponse(
-    ApiResponseHelper.validationErrors([
-      'name must be shorter than or equal to 128 characters',
-      'name must be a string',
-      'name should not be empty',
-      'email must be shorter than or equal to 255 characters',
-      'email must be an email',
-      'email should not be empty',
-      'phoneNumber must be shorter than or equal to 255 characters',
-      'phoneNumber must be a valid phone number',
-      'phoneNumber should not be empty',
-      'walletAddress must be shorter than or equal to 255 characters',
-      'walletAddress must be an Ethereum address',
-      'walletAddress should not be empty',
-      'ticketProviderId must be shorter than or equal to 255 characters',
-      'ticketProviderId must be an integer number',
-      'ticketProviderId should not be empty',
-    ]),
-  )
   @Post()
   async create(@Body() createUserDto: CreateUserValidationDto) {
     return this.userService.create(createUserDto);
@@ -39,29 +20,9 @@ export class UserController {
 
   @ApiOperation({ description: `Update user properties` })
   @ApiResponse(ApiResponseHelper.success(Event, HttpStatus.CREATED))
-  @ApiResponse(
-    ApiResponseHelper.validationErrors([
-      'name must be shorter than or equal to 128 characters',
-      'name must be a string',
-      'name should not be empty',
-      'email must be shorter than or equal to 255 characters',
-      'email must be an email',
-      'email should not be empty',
-      'phoneNumber must be shorter than or equal to 255 characters',
-      'phoneNumber must be a valid phone number',
-      'phoneNumber should not be empty',
-      'walletAddress must be shorter than or equal to 255 characters',
-      'walletAddress must be an Ethereum address',
-      'walletAddress should not be empty',
-      'ticketProviderId must be shorter than or equal to 255 characters',
-      'ticketProviderId must be an integer number',
-      'ticketProviderId should not be empty',
-      'Validation failed (numeric string is expected)',
-    ]),
-  )
-  @Patch('/:userId')
-  async update(@Param('userId', ParseIntPipe) userId: number, @Body() updateUserDto: UpdateUserValidationDto) {
-    return this.userService.update(userId, updateUserDto);
+  @Patch('/:uuid')
+  async update(@Param('uuid') uuid: string, @Body() updateUserDto: UpdateUserValidationDto) {
+    return this.userService.update(uuid, updateUserDto);
   }
 
   @ApiOperation({ description: `Get all user with pagination` })
@@ -74,16 +35,16 @@ export class UserController {
   @ApiOperation({ description: `Get a user by id` })
   @ApiResponse(ApiResponseHelper.success(User))
   @ApiResponse(ApiResponseHelper.validationError(`Validation failed (numeric string is expected)`))
-  @Get(':UserId')
-  async findOne(@Param('UserId', ParseIntPipe) UserId: number) {
-    return this.userService.findById(UserId);
+  @Get(':uuid')
+  async findOne(@Param('uuid') uuid: string) {
+    return this.userService.findByUid(uuid);
   }
 
   @ApiOperation({ description: `Delete user` })
   @ApiResponse(ApiResponseHelper.success(Event, HttpStatus.CREATED))
   @ApiResponse(ApiResponseHelper.validationErrors(['Validation failed (numeric string is expected)']))
-  @Delete('/:userId')
-  async delete(@Param('userId', ParseIntPipe) userId: number) {
-    return this.userService.remove(userId);
+  @Delete('/:uuid')
+  async delete(@Param('uuid') uuid: string) {
+    return this.userService.remove(uuid);
   }
 }
