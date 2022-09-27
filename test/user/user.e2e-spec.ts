@@ -106,7 +106,7 @@ describe('User (e2e)', () => {
       });
   });
 
-  it('Should update a ticket and get updated ticket in response', async () => {
+  it('Should update a user and get updated data in response', async () => {
     const user = await UserFactory.create();
     const updatedUser = {
       name: 'My event 1',
