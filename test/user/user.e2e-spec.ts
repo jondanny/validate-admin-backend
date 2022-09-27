@@ -148,7 +148,7 @@ describe('User (e2e)', () => {
   it(`should delete a user by id`, async () => {
     const user = await UserFactory.create();
     await request(app.getHttpServer())
-      .delete(`/api/v1/users/${user.id}`)
+      .delete(`/api/v1/users/${user.uuid}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer test`)
       .then((response) => {

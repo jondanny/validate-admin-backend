@@ -18,9 +18,8 @@ export class UserService {
 
   async update(uuid: string, updateUserDto: UpdateUserValidationDto) {
     await this.userRepository.update({ uuid: uuid }, updateUserDto);
-    const user = await this.findByUid(uuid);
 
-    return user;
+    return this.findByUuid(uuid);
   }
 
   async findAllPaginated(searchParams: UserFilterDto): Promise<PagingResult<User>> {
@@ -33,7 +32,7 @@ export class UserService {
     return;
   }
 
-  async findByUid(uuid: string): Promise<User> {
+  async findByUuid(uuid: string): Promise<User> {
     return this.userRepository.findOne({ where: { uuid } });
   }
 }
