@@ -139,9 +139,9 @@ describe('User (e2e)', () => {
   });
 
   it(`should delete a ticket provider by id`, async () => {
-    const user = await TicketProviderFactory.create();
+    const ticketProvider = await TicketProviderFactory.create();
     await request(app.getHttpServer())
-      .delete(`/api/v1/ticket-providers/${user.id}`)
+      .delete(`/api/v1/ticket-providers/${ticketProvider.uuid}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer test`)
       .then((response) => {

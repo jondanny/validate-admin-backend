@@ -18,9 +18,8 @@ export class TicketProviderService {
 
   async update(uuid: string, updateTicketProviderDto: UpdateTicketProviderValidationDto) {
     await this.ticketProviderRepository.update({ uuid }, updateTicketProviderDto);
-    const ticketProvider = await this.findByUid(uuid);
 
-    return ticketProvider;
+    return this.findByUuid(uuid);
   }
 
   async findAllPaginated(searchParams: TicketProviderFilterDto): Promise<PagingResult<TicketProvider>> {
@@ -33,7 +32,7 @@ export class TicketProviderService {
     return;
   }
 
-  async findByUid(uuid: string): Promise<TicketProvider> {
+  async findByUuid(uuid: string): Promise<TicketProvider> {
     return this.ticketProviderRepository.findOne({ where: { uuid } });
   }
 }
