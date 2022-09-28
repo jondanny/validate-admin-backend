@@ -8,6 +8,7 @@ import { EnvHelper } from './common/helpers/env.helper';
 import { validate } from './common/validators/env.validator';
 import { TicketProviderModule } from './ticket-provider/ticket-provider.module';
 import databaseConfig from './config/database.config';
+import { UserModule } from './user/user.module';
 
 EnvHelper.verifyNodeEnv();
 
@@ -33,6 +34,7 @@ EnvHelper.verifyNodeEnv();
       inject: [ConfigService],
     }),
     TicketProviderModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
