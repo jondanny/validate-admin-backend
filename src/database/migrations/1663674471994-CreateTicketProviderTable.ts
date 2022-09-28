@@ -44,6 +44,11 @@ export class CreateTicketProviderTable1663674471994 implements MigrationInterfac
             isNullable: true,
           },
           {
+            name: 'deleted_at',
+            type: 'datetime',
+            isNullable: true,
+          },
+          {
             name: 'status',
             type: 'enum',
             enum: Object.values(TicketProviderStatus),
