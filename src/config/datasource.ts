@@ -21,7 +21,6 @@ export const AppDataSource = new DataSource({
   namingStrategy: new SnakeNamingStrategy(),
   charset: 'utf8mb4_unicode_ci',
   legacySpatialSupport: false,
-  namingStrategy: new SnakeNamingStrategy(),
   extra: {
     connectionLimit: process.env.MYSQL_CONNECTION_LIMIT || 200,
     waitForConnections: process.env.MYSQL_WAIT_FOR_CONNECTIONS === 'true',
