@@ -35,4 +35,10 @@ export class TicketProviderService {
   async findByUuid(uuid: string): Promise<TicketProvider> {
     return this.ticketProviderRepository.findOne({ where: { uuid } });
   }
+
+  async isTicketProviderExist(id: number): Promise<boolean> {
+    const ticketProvider = await this.ticketProviderRepository.findOne({ where: { id } });
+
+    return ticketProvider !== null;
+  }
 }

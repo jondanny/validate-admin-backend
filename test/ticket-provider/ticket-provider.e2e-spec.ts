@@ -4,17 +4,24 @@ import * as request from 'supertest';
 import { AppBootstrapManager } from '@src/app-bootstrap.manager';
 import { AppDataSource } from '@src/config/datasource';
 import { TicketProviderFactory } from '@src/database/factories/ticket-provider.factory';
+import { TestHelper } from '@test/helpers/test.helper';
 
 describe('User (e2e)', () => {
   let app: INestApplication;
   let moduleFixture: TestingModule;
+  let testHelper: TestHelper;
 
   beforeAll(async () => {
     moduleFixture = await AppBootstrapManager.getTestingModule();
     app = moduleFixture.createNestApplication();
     AppBootstrapManager.setAppDefaults(app);
     await AppDataSource.initialize();
+    testHelper = new TestHelper(moduleFixture, jest);
     await app.init();
+  });
+
+  beforeEach(async () => {
+    await testHelper.cleanDatabase();
   });
 
   afterAll(async () => {

@@ -1,4 +1,5 @@
 import { TestingModule } from '@nestjs/testing';
+import { AppDataSource } from '@src/config/datasource';
 import { Connection, getConnection } from 'typeorm';
 
 type JestType = typeof jest;
@@ -11,20 +12,17 @@ export class TestHelper {
   constructor(moduleFixture: TestingModule, jest: JestType) {
     this.moduleFixture = moduleFixture;
     this.jest = jest;
-    this.connection = getConnection();
   }
 
   async truncateTable(tableName: string): Promise<void> {
-    const connection = getConnection();
-
-    await connection.query(`TRUNCATE TABLE ${tableName}`);
+    await AppDataSource.query(`TRUNCATE TABLE ${tableName}`);
   }
 
   async cleanDatabase(): Promise<void> {
     await Promise.all(
-      this.connection.entityMetadatas
+      AppDataSource.entityMetadatas
         .filter((entity) => entity.tableName !== 'base_entity')
-        .map((entity) => this.connection.query(`TRUNCATE TABLE ${entity.tableName}`)),
+        .map((entity) => AppDataSource.query(`TRUNCATE TABLE ${entity.tableName}`)),
     );
   }
 }
