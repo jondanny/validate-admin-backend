@@ -9,6 +9,9 @@ import { validate } from './common/validators/env.validator';
 import { TicketProviderModule } from './ticket-provider/ticket-provider.module';
 import databaseConfig from './config/database.config';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { AdminModule } from './admin/admin.module';
+import jwtConfig from './config/jwt.config';
 
 EnvHelper.verifyNodeEnv();
 
@@ -17,7 +20,7 @@ EnvHelper.verifyNodeEnv();
     ConfigModule.forRoot({
       envFilePath: EnvHelper.getEnvFilePath(),
       isGlobal: true,
-      load: [databaseConfig],
+      load: [databaseConfig, jwtConfig],
       validate: validate,
     }),
     TypeOrmModule.forRootAsync({
@@ -35,6 +38,8 @@ EnvHelper.verifyNodeEnv();
     }),
     TicketProviderModule,
     UserModule,
+    AuthModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

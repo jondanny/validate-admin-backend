@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { ApiResponseHelper } from '@src/common/helpers/api-response.helper';
@@ -8,6 +20,8 @@ import { User } from './user.entity';
 import { PagingResult } from 'typeorm-cursor-pagination';
 import { UserFilterDto } from './dto/user.filter.dto';
 import { PaginatedResult } from '@src/common/pagination/pagination.types';
+import { JwtAuthGuard } from '@src/auth/guards/jwt-auth.guard';
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -18,7 +32,6 @@ export class UserController {
   async create(@Body() createUserDto: CreateUserValidationDto) {
     return this.userService.create(createUserDto);
   }
-
   @ApiOperation({ description: `Update user properties` })
   @ApiResponse(ApiResponseHelper.success(User, HttpStatus.OK))
   @Patch(':uuid')
@@ -32,7 +45,6 @@ export class UserController {
   async findAllPaginated(@Query() searchParams: UserFilterDto): Promise<PagingResult<User>> {
     return this.userService.findAllPaginated(searchParams);
   }
-
   @ApiOperation({ description: `Get a user by id` })
   @ApiResponse(ApiResponseHelper.success(User))
   @ApiResponse(ApiResponseHelper.validationError(`Validation failed (numeric string is expected)`))
@@ -40,7 +52,6 @@ export class UserController {
   async findOne(@Param('uuid', ParseUUIDPipe) uuid: string) {
     return this.userService.findByUuid(uuid);
   }
-
   @ApiOperation({ description: `Delete user` })
   @ApiResponse(ApiResponseHelper.success(Event, HttpStatus.CREATED))
   @ApiResponse(ApiResponseHelper.validationErrors(['Validation failed (numeric string is expected)']))
