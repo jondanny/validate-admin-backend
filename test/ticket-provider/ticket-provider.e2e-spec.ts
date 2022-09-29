@@ -4,15 +4,19 @@ import * as request from 'supertest';
 import { AppBootstrapManager } from '@src/app-bootstrap.manager';
 import { AppDataSource } from '@src/config/datasource';
 import { TicketProviderFactory } from '@src/database/factories/ticket-provider.factory';
+import { AdminFactory } from '@src/database/factories/admin.factory';
+import { TestHelper } from '@test/helpers/test.helper';
 
 describe('User (e2e)', () => {
   let app: INestApplication;
   let moduleFixture: TestingModule;
+  let testHelper: TestHelper;
 
   beforeAll(async () => {
     moduleFixture = await AppBootstrapManager.getTestingModule();
     app = moduleFixture.createNestApplication();
     AppBootstrapManager.setAppDefaults(app);
+    testHelper = new TestHelper(moduleFixture, jest);
     await AppDataSource.initialize();
     await app.init();
   });
@@ -25,16 +29,26 @@ describe('User (e2e)', () => {
     jest.restoreAllMocks();
   });
 
+  it('Checks that endpoint throws unauthorized error', () => {
+    request(app.getHttpServer()).get('/api/v1/ticket-providers').expect(HttpStatus.UNAUTHORIZED);
+    request(app.getHttpServer()).get('/api/v1/ticket-providers/test').expect(HttpStatus.UNAUTHORIZED);
+    request(app.getHttpServer()).post('/api/v1/ticket-providers').expect(HttpStatus.UNAUTHORIZED);
+    request(app.getHttpServer()).patch('/api/v1/ticket-providers').expect(HttpStatus.UNAUTHORIZED);
+    request(app.getHttpServer()).delete('/api/v1/ticket-providers').expect(HttpStatus.UNAUTHORIZED);
+  });
+
   it('Should post a ticket provider and return validation errors in response', async () => {
-    const userData = {
+    const admin = await AdminFactory.create();
+    const token = testHelper.setAuthenticatedAdmin(admin);
+    const ticketProviderData = {
       name: null,
       email: null,
     };
     await request(app.getHttpServer())
       .post('/api/v1/ticket-providers')
-      .send(userData)
+      .send(ticketProviderData)
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer test`)
+      .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.body.message).toEqual(
           expect.arrayContaining([
@@ -47,20 +61,22 @@ describe('User (e2e)', () => {
   });
 
   it(`should post a ticket provider and get it back in response`, async () => {
-    const userData = {
+    const admin = await AdminFactory.create();
+    const token = testHelper.setAuthenticatedAdmin(admin);
+
+    const ticketProviderData = {
       name: 'Muaaz Tausif',
       email: 'muaaz@gmail.com',
     };
-
     await request(app.getHttpServer())
       .post('/api/v1/ticket-providers')
-      .send(userData)
+      .send(ticketProviderData)
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer test`)
+      .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.body).toEqual(
           expect.objectContaining({
-            ...userData,
+            ...ticketProviderData,
           }),
         );
         expect(response.status).toBe(HttpStatus.CREATED);
@@ -68,12 +84,14 @@ describe('User (e2e)', () => {
   });
 
   it(`should get ticket provider by pagination`, async () => {
+    const admin = await AdminFactory.create();
+    const token = testHelper.setAuthenticatedAdmin(admin);
     const ticketProvider = await TicketProviderFactory.create();
     const ticketProvider2 = await TicketProviderFactory.create();
     await request(app.getHttpServer())
       .get(`/api/v1/ticket-providers?limit=1`)
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer test`)
+      .set('Authorization', `Bearer ${token}`)
       .then(async (response) => {
         expect(response.body.data).toEqual(
           expect.arrayContaining([
@@ -86,7 +104,7 @@ describe('User (e2e)', () => {
         await request(app.getHttpServer())
           .get(`/api/v1/ticket-providers?limit=1&afterCursor=${afterCursor}`)
           .set('Accept', 'application/json')
-          .set('Authorization', `Bearer test`)
+          .set('Authorization', `Bearer ${token}`)
           .then((response) => {
             expect(response.body.data).toEqual(
               expect.arrayContaining([
@@ -101,6 +119,8 @@ describe('User (e2e)', () => {
   });
 
   it('Should update a ticket provider and get updated data in response', async () => {
+    const admin = await AdminFactory.create();
+    const token = testHelper.setAuthenticatedAdmin(admin);
     const ticketProvider = await TicketProviderFactory.create();
     const updatedUser = {
       name: 'Muaaz Tausif',
@@ -110,7 +130,7 @@ describe('User (e2e)', () => {
       .patch(`/api/v1/ticket-providers/${ticketProvider.uuid}`)
       .send(updatedUser)
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer test`)
+      .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.body).toEqual(
           expect.objectContaining({
@@ -123,11 +143,13 @@ describe('User (e2e)', () => {
   });
 
   it(`should get a ticket provider by id`, async () => {
+    const admin = await AdminFactory.create();
+    const token = testHelper.setAuthenticatedAdmin(admin);
     const ticketProvider = await TicketProviderFactory.create();
     await request(app.getHttpServer())
       .get(`/api/v1/ticket-providers/${ticketProvider.uuid}`)
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer test`)
+      .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.body).toEqual(
           expect.objectContaining({
@@ -139,11 +161,13 @@ describe('User (e2e)', () => {
   });
 
   it(`should delete a ticket provider by id`, async () => {
+    const admin = await AdminFactory.create();
+    const token = testHelper.setAuthenticatedAdmin(admin);
     const ticketProvider = await TicketProviderFactory.create();
     await request(app.getHttpServer())
       .delete(`/api/v1/ticket-providers/${ticketProvider.uuid}`)
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer test`)
+      .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.status).toBe(HttpStatus.OK);
       });

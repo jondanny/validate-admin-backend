@@ -7,8 +7,8 @@ export class TicketProviderFactory {
     const ticketProvider = new TicketProvider();
     ticketProvider.name = faker.name.firstName();
     ticketProvider.email = faker.internet.email();
-    const userRepo = AppDataSource.manager.getRepository(TicketProvider);
+    const ticketProviderRepo = AppDataSource.manager.getRepository(TicketProvider);
 
-    return await userRepo.save({ ...data, ...ticketProvider });
+    return await ticketProviderRepo.save({ ...data, ...ticketProvider });
   }
 }
