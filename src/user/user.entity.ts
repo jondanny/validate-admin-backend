@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn } from 'typeorm';
+import { UserStatus } from './user.types';
 
 @Entity('user')
 export class User {
@@ -29,6 +30,10 @@ export class User {
   @ApiProperty({ description: 'Ticket Provider id', required: true })
   @Column({ type: 'int', nullable: false })
   ticketProviderId: number;
+
+  @ApiProperty({ description: 'Ticket status', enum: UserStatus, required: true })
+  @Column({ type: 'varchar', nullable: false, enum: UserStatus })
+  status: UserStatus;
 
   @ApiProperty({ description: 'Date when the user was created', required: true })
   @Column({ type: 'datetime', nullable: false })

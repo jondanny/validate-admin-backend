@@ -9,6 +9,7 @@ import { validate } from './common/validators/env.validator';
 import { TicketProviderModule } from './ticket-provider/ticket-provider.module';
 import databaseConfig from './config/database.config';
 import { UserModule } from './user/user.module';
+import { TicketModule } from './ticket/ticket.module';
 
 EnvHelper.verifyNodeEnv();
 
@@ -35,6 +36,7 @@ EnvHelper.verifyNodeEnv();
     }),
     TicketProviderModule,
     UserModule,
+    TicketModule,
   ],
   controllers: [AppController],
   providers: [AppService],

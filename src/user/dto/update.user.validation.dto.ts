@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsOptional, IsPhoneNumber, IsString, MaxLength } from 'class-validator';
+import { IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString, MaxLength } from 'class-validator';
+import { UserStatus } from '../user.types';
 
 export class UpdateUserValidationDto {
   @ApiProperty({ example: 'John Bucks', required: true })
@@ -19,4 +20,9 @@ export class UpdateUserValidationDto {
   @IsPhoneNumber()
   @MaxLength(255)
   phoneNumber: string;
+
+  @ApiProperty({ example: UserStatus.Active, required: true, default: UserStatus.Active })
+  @IsOptional()
+  @IsEnum(UserStatus)
+  status: UserStatus;
 }

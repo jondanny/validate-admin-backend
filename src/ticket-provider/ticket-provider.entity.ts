@@ -20,7 +20,7 @@ export class TicketProvider {
   @Column({ type: 'varchar', nullable: false, length: 255 })
   email: string;
 
-  @ApiProperty({ description: 'Ticket provider status', enum: TicketProviderStatus, required: false })
+  @ApiProperty({ description: 'Ticket provider status', enum: TicketProviderStatus, required: true })
   @Column({ type: 'varchar', nullable: false, enum: TicketProviderStatus })
   status: TicketProviderStatus;
 
