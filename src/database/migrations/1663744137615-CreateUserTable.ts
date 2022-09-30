@@ -63,7 +63,7 @@ export class CreateUserTable1663744137615 implements MigrationInterface {
             name: 'status',
             type: 'enum',
             enum: Object.values(UserStatus),
-            default: `'${UserStatus.Active}'`,
+            default: `'${UserStatus.Creating}'`,
           },
           {
             name: 'deleted_at',

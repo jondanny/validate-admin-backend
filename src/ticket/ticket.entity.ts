@@ -6,9 +6,9 @@ import { TicketStatus } from './ticket.types';
 export class Ticket {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
-  @ApiProperty({ description: 'Unique uid', maximum: 128 })
-  @Column({ type: 'varchar', nullable: false, length: 128 })
-  @Generated('uuid')
+
+  @ApiProperty({ description: 'Unique uid', maximum: 36 })
+  @Column({ type: 'varchar', nullable: false, length: 36 })
   uuid: string;
 
   @ApiProperty({ description: 'Name', maximum: 128, required: false })
@@ -27,7 +27,7 @@ export class Ticket {
   @Column({ type: 'varchar', nullable: true, length: 64 })
   contractId: string;
 
-  @ApiProperty({ description: 'Contract id', maximum: 2048, required: false })
+  @ApiProperty({ description: 'Ipfs uri', maximum: 2048, required: false })
   @Column({ type: 'varchar', nullable: true, length: 2048 })
   ipfsUri: string;
 
