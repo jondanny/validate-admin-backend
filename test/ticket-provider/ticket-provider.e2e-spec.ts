@@ -73,6 +73,7 @@ describe('Ticket Provider (e2e)', () => {
       name: 'Muaaz Tausif',
       email: 'muaaz@gmail.com',
     };
+
     await request(app.getHttpServer())
       .post('/api/v1/ticket-providers')
       .send(ticketProviderData)
@@ -91,8 +92,10 @@ describe('Ticket Provider (e2e)', () => {
   it(`should get ticket provider by pagination`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
+
     const ticketProvider = await TicketProviderFactory.create();
     const ticketProvider2 = await TicketProviderFactory.create();
+
     await request(app.getHttpServer())
       .get(`/api/v1/ticket-providers?limit=1`)
       .set('Accept', 'application/json')
@@ -126,11 +129,13 @@ describe('Ticket Provider (e2e)', () => {
   it('Should update a ticket provider and get updated data in response', async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
+
     const ticketProvider = await TicketProviderFactory.create();
     const updatedTicketProvider = {
       name: 'Muaaz Tausif',
       email: 'muaaz@gmail.com',
     };
+
     await request(app.getHttpServer())
       .patch(`/api/v1/ticket-providers/${ticketProvider.uuid}`)
       .send(updatedTicketProvider)
@@ -150,7 +155,9 @@ describe('Ticket Provider (e2e)', () => {
   it(`should get a ticket provider by id`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
+
     const ticketProvider = await TicketProviderFactory.create();
+
     await request(app.getHttpServer())
       .get(`/api/v1/ticket-providers/${ticketProvider.uuid}`)
       .set('Accept', 'application/json')
@@ -168,7 +175,9 @@ describe('Ticket Provider (e2e)', () => {
   it(`should delete a ticket provider by id`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
+
     const ticketProvider = await TicketProviderFactory.create();
+
     await request(app.getHttpServer())
       .delete(`/api/v1/ticket-providers/${ticketProvider.uuid}`)
       .set('Accept', 'application/json')

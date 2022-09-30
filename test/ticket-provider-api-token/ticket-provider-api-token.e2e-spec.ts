@@ -3,14 +3,13 @@ import { TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppBootstrapManager } from '@src/app-bootstrap.manager';
 import { AppDataSource } from '@src/config/datasource';
-import { TicketFactory } from '@src/database/factories/ticket.factory';
-import { TestHelper } from '@test/helpers/test.helper';
 import { TicketProviderFactory } from '@src/database/factories/ticket-provider.factory';
-import { faker } from '@faker-js/faker';
-import { UserFactory } from '@src/database/factories/user.factory';
 import { AdminFactory } from '@src/database/factories/admin.factory';
+import { TestHelper } from '@test/helpers/test.helper';
+import { faker } from '@faker-js/faker';
+import { TicketProviderApiTokenFactory } from '@src/database/factories/ticket-provider-api-token.factory';
 
-describe('Ticket (e2e)', () => {
+describe('Ticket Provider Api Token (e2e)', () => {
   let app: INestApplication;
   let moduleFixture: TestingModule;
   let testHelper: TestHelper;
@@ -19,6 +18,7 @@ describe('Ticket (e2e)', () => {
     moduleFixture = await AppBootstrapManager.getTestingModule();
     app = moduleFixture.createNestApplication();
     AppBootstrapManager.setAppDefaults(app);
+    testHelper = new TestHelper(moduleFixture, jest);
     await AppDataSource.initialize();
     testHelper = new TestHelper(moduleFixture, jest);
     await app.init();
@@ -37,104 +37,86 @@ describe('Ticket (e2e)', () => {
   });
 
   it('Checks that endpoint throws unauthorized error', () => {
-    request(app.getHttpServer()).get('/api/v1/tickets').expect(HttpStatus.UNAUTHORIZED);
-    request(app.getHttpServer()).get('/api/v1/tickets/test').expect(HttpStatus.UNAUTHORIZED);
-    request(app.getHttpServer()).post('/api/v1/tickets').expect(HttpStatus.UNAUTHORIZED);
-    request(app.getHttpServer()).patch('/api/v1/tickets').expect(HttpStatus.UNAUTHORIZED);
-    request(app.getHttpServer()).delete('/api/v1/tickets').expect(HttpStatus.UNAUTHORIZED);
+    request(app.getHttpServer()).get('/api/v1/ticket-provider-api-tokens').expect(HttpStatus.UNAUTHORIZED);
+    request(app.getHttpServer()).get('/api/v1/ticket-provider-api-tokens/test').expect(HttpStatus.UNAUTHORIZED);
+    request(app.getHttpServer()).post('/api/v1/ticket-provider-api-tokens').expect(HttpStatus.UNAUTHORIZED);
+    request(app.getHttpServer()).patch('/api/v1/ticket-provider-api-tokens').expect(HttpStatus.UNAUTHORIZED);
+    request(app.getHttpServer()).delete('/api/v1/ticket-provider-api-tokens').expect(HttpStatus.UNAUTHORIZED);
   });
 
-  it('Should post a ticket and return validation errors in response', async () => {
+  it('Should post a ticket provider api token and return validation errors in response', async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
-
-    const ticketData = {};
+    const ticketProviderApiTokenData = {};
 
     await request(app.getHttpServer())
-      .post('/api/v1/tickets')
-      .send(ticketData)
+      .post('/api/v1/ticket-provider-api-tokens')
+      .send(ticketProviderApiTokenData)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.body.message).toEqual(
-          expect.arrayContaining([
-            'ticketProviderId must be an integer number',
-            'Ticket provider is not valid.',
-            'userId must be an integer number',
-            'User is not valid.',
-          ]),
+          expect.arrayContaining(['ticketProviderId must be an integer number', 'Ticket provider is not valid.']),
         );
         expect(response.status).toBe(HttpStatus.BAD_REQUEST);
       });
   });
 
-  it(`should post a ticket and get it back in response`, async () => {
+  it(`should post a ticket provider api token and get it back in response`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
 
     const ticketProvider = await TicketProviderFactory.create();
-    const user = await UserFactory.create({ ticketProviderId: ticketProvider.id });
-    const ticketData = {
-      name: faker.name.firstName(),
-      contractId: faker.lorem.words(5),
-      ipfsUri: faker.internet.url(),
-      imageUrl: faker.internet.url(),
-      tokenId: Math.floor(Math.random() * 100),
-      additionalData: JSON.stringify({ id: 0 }),
+    const ticketProviderData = {
+      token: faker.lorem.words(3),
       ticketProviderId: ticketProvider.id,
-      userId: user.id,
     };
 
     await request(app.getHttpServer())
-      .post('/api/v1/tickets')
-      .send(ticketData)
+      .post('/api/v1/ticket-provider-api-tokens')
+      .send(ticketProviderData)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.body).toEqual(
           expect.objectContaining({
-            ...ticketData,
-            additionalData: JSON.parse(ticketData.additionalData),
+            ...ticketProviderData,
           }),
         );
         expect(response.status).toBe(HttpStatus.CREATED);
       });
   });
 
-  it(`should get ticket by pagination`, async () => {
+  it(`should get ticket provider api token by pagination`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
 
     const ticketProvider = await TicketProviderFactory.create();
-    const user = await UserFactory.create({ ticketProviderId: ticketProvider.id });
-    const ticket = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
-    const ticket2 = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
+    const ticketProviderApiToken = await TicketProviderApiTokenFactory.create({ ticketProviderId: ticketProvider.id });
+    const ticketProviderApiToken2 = await TicketProviderApiTokenFactory.create({ ticketProviderId: ticketProvider.id });
 
     await request(app.getHttpServer())
-      .get(`/api/v1/tickets?limit=1`)
+      .get(`/api/v1/ticket-provider-api-tokens?limit=1`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then(async (response) => {
         expect(response.body.data).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              ...ticket2,
-              additionalData: JSON.parse(ticket2.additionalData),
+              ...ticketProviderApiToken2,
             }),
           ]),
         );
         const afterCursor = response.body.cursor.afterCursor;
-
         await request(app.getHttpServer())
-          .get(`/api/v1/tickets?limit=1&afterCursor=${afterCursor}`)
+          .get(`/api/v1/ticket-provider-api-tokens?limit=1&afterCursor=${afterCursor}`)
           .set('Accept', 'application/json')
           .set('Authorization', `Bearer ${token}`)
           .then((response) => {
             expect(response.body.data).toEqual(
               expect.arrayContaining([
                 expect.objectContaining({
-                  ...ticket,
-                  additionalData: JSON.parse(ticket.additionalData),
+                  ...ticketProviderApiToken,
                 }),
               ]),
             );
@@ -143,73 +125,62 @@ describe('Ticket (e2e)', () => {
       });
   });
 
-  it('Should update a ticket and get updated data in response', async () => {
+  it('Should update a ticket provider api token and get updated data in response', async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
 
     const ticketProvider = await TicketProviderFactory.create();
-    const user = await UserFactory.create({ ticketProviderId: ticketProvider.id });
-    const ticket = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
-    const updatedTicket = {
-      name: faker.name.firstName(),
-      contractId: faker.lorem.words(5),
-      ipfsUri: faker.internet.url(),
-      imageUrl: faker.internet.url(),
-      tokenId: Math.floor(Math.random() * 100),
-      additionalData: JSON.stringify({ id: 0 }),
-      ticketProviderId: ticketProvider.id,
+    const ticketProviderApiToken = await TicketProviderApiTokenFactory.create({ ticketProviderId: ticketProvider.id });
+    const updatedTicketProviderApiToken = {
+      token: faker.lorem.words(3),
     };
 
     await request(app.getHttpServer())
-      .patch(`/api/v1/tickets/${ticket.uuid}`)
-      .send(updatedTicket)
+      .patch(`/api/v1/ticket-provider-api-tokens/${ticketProviderApiToken.id}`)
+      .send(updatedTicketProviderApiToken)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.body).toEqual(
           expect.objectContaining({
-            id: ticket.id,
-            ...updatedTicket,
-            additionalData: JSON.parse(updatedTicket.additionalData),
+            id: ticketProviderApiToken.id,
+            ...updatedTicketProviderApiToken,
           }),
         );
         expect(response.status).toBe(HttpStatus.OK);
       });
   });
 
-  it(`should get a ticket by id`, async () => {
+  it(`should get a ticket provider api token by id`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
 
     const ticketProvider = await TicketProviderFactory.create();
-    const user = await UserFactory.create({ ticketProviderId: ticketProvider.id });
-    const ticket = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
+    const ticketProviderApiToken = await TicketProviderApiTokenFactory.create({ ticketProviderId: ticketProvider.id });
 
     await request(app.getHttpServer())
-      .get(`/api/v1/tickets/${ticket.uuid}`)
+      .get(`/api/v1/ticket-provider-api-tokens/${ticketProviderApiToken.id}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.body).toEqual(
           expect.objectContaining({
-            ...ticket,
-            additionalData: JSON.parse(ticket.additionalData),
+            ...ticketProviderApiToken,
           }),
         );
         expect(response.status).toBe(HttpStatus.OK);
       });
   });
 
-  it(`should delete a ticket by id`, async () => {
+  it(`should delete a ticket provider by id`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
 
     const ticketProvider = await TicketProviderFactory.create();
-    const user = await UserFactory.create({ ticketProviderId: ticketProvider.id });
-    const ticket = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
+    const ticketProviderApiToken = await TicketProviderApiTokenFactory.create({ ticketProviderId: ticketProvider.id });
 
     await request(app.getHttpServer())
-      .delete(`/api/v1/tickets/${ticket.uuid}`)
+      .delete(`/api/v1/ticket-provider-api-tokens/${ticketProviderApiToken.id}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
