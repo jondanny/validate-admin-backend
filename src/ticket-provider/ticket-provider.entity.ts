@@ -7,9 +7,8 @@ export class TicketProvider {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 
-  @ApiProperty({ description: 'Unique uid', maximum: 128 })
-  @Column({ type: 'varchar', nullable: false, length: 128 })
-  @Generated('uuid')
+  @ApiProperty({ description: 'Unique uid', maximum: 36 })
+  @Column({ type: 'varchar', nullable: false, length: 36 })
   uuid: string;
 
   @ApiProperty({ description: 'Name', maximum: 128, required: false })
@@ -20,7 +19,7 @@ export class TicketProvider {
   @Column({ type: 'varchar', nullable: false, length: 255 })
   email: string;
 
-  @ApiProperty({ description: 'Ticket provider status', enum: TicketProviderStatus, required: false })
+  @ApiProperty({ description: 'Ticket provider status', enum: TicketProviderStatus, required: true })
   @Column({ type: 'varchar', nullable: false, enum: TicketProviderStatus })
   status: TicketProviderStatus;
 

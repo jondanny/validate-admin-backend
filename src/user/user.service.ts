@@ -35,4 +35,10 @@ export class UserService {
   async findByUuid(uuid: string): Promise<User> {
     return this.userRepository.findOne({ where: { uuid } });
   }
+
+  async isUserExist(id: number): Promise<boolean> {
+    const user = await this.userRepository.findOne({ where: { id } });
+
+    return user !== null;
+  }
 }

@@ -1,11 +1,11 @@
-import { UserStatus } from '@src/user/user.types';
+import { TicketStatus } from '@src/ticket/ticket.types';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateUserTable1663744137615 implements MigrationInterface {
+export class CreateTicketTable1664449903033 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'user',
+        name: 'ticket',
         columns: [
           {
             name: 'id',
@@ -28,16 +28,32 @@ export class CreateUserTable1663744137615 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'email',
+            name: 'image_url',
             type: 'varchar',
-            length: '255',
-            isNullable: false,
+            isNullable: true,
+            length: '2048',
           },
           {
-            name: 'phone_number',
-            type: 'varchar',
-            length: '255',
+            name: 'additional_data',
+            type: 'json',
             isNullable: true,
+          },
+          {
+            name: 'contract_id',
+            type: 'varchar',
+            length: '64',
+            isNullable: true,
+          },
+          {
+            name: 'token_id',
+            type: 'int',
+            isNullable: true,
+          },
+          {
+            name: 'status',
+            type: 'enum',
+            enum: Object.values(TicketStatus),
+            default: `'${TicketStatus.Active}'`,
           },
           {
             name: 'ticket_provider_id',
@@ -45,8 +61,14 @@ export class CreateUserTable1663744137615 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'wallet_address',
+            name: 'user_id',
+            type: 'int',
+            isNullable: false,
+          },
+          {
+            name: 'ipfs_uri',
             type: 'varchar',
+            length: '2048',
             isNullable: true,
           },
           {
@@ -60,12 +82,6 @@ export class CreateUserTable1663744137615 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'status',
-            type: 'enum',
-            enum: Object.values(UserStatus),
-            default: `'${UserStatus.Creating}'`,
-          },
-          {
             name: 'deleted_at',
             type: 'datetime',
             isNullable: true,
@@ -77,6 +93,6 @@ export class CreateUserTable1663744137615 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('user');
+    await queryRunner.dropTable('ticket');
   }
 }

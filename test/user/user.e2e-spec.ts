@@ -4,6 +4,7 @@ import * as request from 'supertest';
 import { AppBootstrapManager } from '@src/app-bootstrap.manager';
 import { UserFactory } from '@src/database/factories/user.factory';
 import { AppDataSource } from '@src/config/datasource';
+import { TicketProviderFactory } from '@src/database/factories/ticket-provider.factory';
 import { AdminFactory } from '@src/database/factories/admin.factory';
 import { TestHelper } from '@test/helpers/test.helper';
 
@@ -18,11 +19,16 @@ describe('User (e2e)', () => {
     AppBootstrapManager.setAppDefaults(app);
     testHelper = new TestHelper(moduleFixture, jest);
     await AppDataSource.initialize();
+    testHelper = new TestHelper(moduleFixture, jest);
     await app.init();
   });
 
   afterAll(async () => {
     await app.close();
+  });
+
+  beforeEach(async () => {
+    await testHelper.cleanDatabase();
   });
 
   afterEach(() => {
@@ -58,6 +64,7 @@ describe('User (e2e)', () => {
             'email must be shorter than or equal to 255 characters',
             'phoneNumber must be shorter than or equal to 255 characters',
             'ticketProviderId must be an integer number',
+            'Ticket provider is not valid.',
           ]),
         );
         expect(response.status).toBe(HttpStatus.BAD_REQUEST);
@@ -67,11 +74,12 @@ describe('User (e2e)', () => {
   it(`should post a user and get it back in response`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
+    const ticketProvider = await TicketProviderFactory.create();
     const userData = {
       name: 'My event 1',
       email: 'muaaz@gmail.com',
       phoneNumber: '+923214757374',
-      ticketProviderId: 1,
+      ticketProviderId: ticketProvider.id,
     };
 
     await request(app.getHttpServer())

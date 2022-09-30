@@ -1,4 +1,5 @@
 import { TestingModule } from '@nestjs/testing';
+import { AppDataSource } from '@src/config/datasource';
 import { Admin } from '@src/admin/admin.entity';
 import { JwtService } from '@nestjs/jwt';
 
@@ -11,6 +12,18 @@ export class TestHelper {
   constructor(moduleFixture: TestingModule, jest: JestType) {
     this.moduleFixture = moduleFixture;
     this.jest = jest;
+  }
+
+  async truncateTable(tableName: string): Promise<void> {
+    await AppDataSource.query(`TRUNCATE TABLE ${tableName}`);
+  }
+
+  async cleanDatabase(): Promise<void> {
+    await Promise.all(
+      AppDataSource.entityMetadatas
+        .filter((entity) => entity.tableName !== 'base_entity')
+        .map((entity) => AppDataSource.query(`TRUNCATE TABLE ${entity.tableName}`)),
+    );
   }
 
   /**

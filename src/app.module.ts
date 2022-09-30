@@ -9,6 +9,7 @@ import { validate } from './common/validators/env.validator';
 import { TicketProviderModule } from './ticket-provider/ticket-provider.module';
 import databaseConfig from './config/database.config';
 import { UserModule } from './user/user.module';
+import { TicketModule } from './ticket/ticket.module';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
 import jwtConfig from './config/jwt.config';
@@ -38,6 +39,7 @@ EnvHelper.verifyNodeEnv();
     }),
     TicketProviderModule,
     UserModule,
+    TicketModule,
     AuthModule,
     AdminModule,
   ],

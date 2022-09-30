@@ -28,6 +28,7 @@ export class TicketProviderController {
 
   @ApiOperation({ description: `Create a ticket provider` })
   @ApiResponse(ApiResponseHelper.success(TicketProvider, HttpStatus.CREATED))
+  @ApiResponse(ApiResponseHelper.validationError(`Ticket provider is not valid`))
   @Post()
   async create(@Body() createTicketProviderDto: CreateTicketProviderValidationDto) {
     return this.ticketProviderService.create(createTicketProviderDto);
