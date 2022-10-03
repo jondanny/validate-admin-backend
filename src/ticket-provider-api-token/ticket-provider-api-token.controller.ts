@@ -19,12 +19,11 @@ import { TicketProviderApiTokenService } from './ticket-provider-api-token.servi
 import { ApiResponseHelper } from '@src/common/helpers/api-response.helper';
 import { TicketProviderApiToken } from './ticket-provider-api-token.entity';
 import { CreateTicketProviderApiTokenValidationDto } from './dto/create-ticket-provider-api-token.validation.dto';
-import { UpdateTicketProviderApiTokenValidationDto } from './dto/update-ticket-provider-api-token.validation.dto';
 import { TicketProviderApiTokenFilterDto } from './dto/ticket-provider-api-token.filter.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('ticket-provider-api-tokens')
-export class TicketProviderApiTokenApiTokenController {
+export class TicketProviderApiTokenController {
   constructor(private readonly ticketProviderApiTokenService: TicketProviderApiTokenService) {}
 
   @ApiOperation({ description: `Create a ticket provider api token` })
@@ -33,17 +32,6 @@ export class TicketProviderApiTokenApiTokenController {
   @Post()
   async create(@Body() createTicketProviderApiTokenDto: CreateTicketProviderApiTokenValidationDto) {
     return this.ticketProviderApiTokenService.create(createTicketProviderApiTokenDto);
-  }
-
-  @ApiOperation({ description: `Update Ticket provider properties` })
-  @ApiResponse(ApiResponseHelper.success(TicketProviderApiToken, HttpStatus.OK))
-  @ApiResponse(ApiResponseHelper.validationError(`Validation failed (uuid is expected)`))
-  @Patch(':id')
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateTicketProviderApiTokenDto: UpdateTicketProviderApiTokenValidationDto,
-  ) {
-    return this.ticketProviderApiTokenService.update(id, updateTicketProviderApiTokenDto);
   }
 
   @ApiOperation({ description: `Get all ticket provider api tokens with pagination` })

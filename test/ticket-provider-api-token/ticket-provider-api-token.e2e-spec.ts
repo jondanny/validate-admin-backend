@@ -125,32 +125,6 @@ describe('Ticket Provider Api Token (e2e)', () => {
       });
   });
 
-  it('Should update a ticket provider api token and get updated data in response', async () => {
-    const admin = await AdminFactory.create();
-    const token = testHelper.setAuthenticatedAdmin(admin);
-
-    const ticketProvider = await TicketProviderFactory.create();
-    const ticketProviderApiToken = await TicketProviderApiTokenFactory.create({ ticketProviderId: ticketProvider.id });
-    const updatedTicketProviderApiToken = {
-      token: faker.lorem.words(3),
-    };
-
-    await request(app.getHttpServer())
-      .patch(`/api/v1/ticket-provider-api-tokens/${ticketProviderApiToken.id}`)
-      .send(updatedTicketProviderApiToken)
-      .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${token}`)
-      .then((response) => {
-        expect(response.body).toEqual(
-          expect.objectContaining({
-            id: ticketProviderApiToken.id,
-            ...updatedTicketProviderApiToken,
-          }),
-        );
-        expect(response.status).toBe(HttpStatus.OK);
-      });
-  });
-
   it(`should get a ticket provider api token by id`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);

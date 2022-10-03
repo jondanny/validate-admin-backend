@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PagingResult } from 'typeorm-cursor-pagination';
 import { CreateTicketProviderApiTokenValidationDto } from './dto/create-ticket-provider-api-token.validation.dto';
 import { TicketProviderApiTokenFilterDto } from './dto/ticket-provider-api-token.filter.dto';
-import { UpdateTicketProviderApiTokenValidationDto } from './dto/update-ticket-provider-api-token.validation.dto';
 import { TicketProviderApiToken } from './ticket-provider-api-token.entity';
 import { TicketProviderApiTokenRepository } from './ticket-provider-api-token.repository';
 
@@ -15,12 +14,6 @@ export class TicketProviderApiTokenService {
     );
 
     return this.ticketProviderApiTokenRepository.findOne({ where: { id: ticketProviderApiToken.id } });
-  }
-
-  async update(id: number, updateTicketApiTokenDto: UpdateTicketProviderApiTokenValidationDto) {
-    await this.ticketProviderApiTokenRepository.update({ id }, updateTicketApiTokenDto);
-
-    return this.findById(id);
   }
 
   async findAllPaginated(searchParams: TicketProviderApiTokenFilterDto): Promise<PagingResult<TicketProviderApiToken>> {
