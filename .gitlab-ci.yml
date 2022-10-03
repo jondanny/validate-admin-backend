@@ -17,7 +17,7 @@ test:
   - name: docker:20-dind
     command: ["--tls=false"]
   script:
-    - docker-compose run --rm api sh -c "npm run migration:run:ci && npm run test:ci"
+    - docker-compose run --rm admin-api sh -c "npm run migration:run:ci && npm run test:ci"
   artifacts:
     when: always
     reports:
