@@ -93,7 +93,6 @@ describe('Ticket Provider Api Token (e2e)', () => {
 
     const ticketProvider = await TicketProviderFactory.create();
     const ticketProviderApiToken = await TicketProviderApiTokenFactory.create({ ticketProviderId: ticketProvider.id });
-    const ticketProviderApiToken2 = await TicketProviderApiTokenFactory.create({ ticketProviderId: ticketProvider.id });
 
     await request(app.getHttpServer())
       .get(`/api/v1/ticket-provider-api-tokens?limit=1`)
@@ -103,25 +102,10 @@ describe('Ticket Provider Api Token (e2e)', () => {
         expect(response.body.data).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              ...ticketProviderApiToken2,
+              ...ticketProviderApiToken,
             }),
           ]),
         );
-        const afterCursor = response.body.cursor.afterCursor;
-        await request(app.getHttpServer())
-          .get(`/api/v1/ticket-provider-api-tokens?limit=1&afterCursor=${afterCursor}`)
-          .set('Accept', 'application/json')
-          .set('Authorization', `Bearer ${token}`)
-          .then((response) => {
-            expect(response.body.data).toEqual(
-              expect.arrayContaining([
-                expect.objectContaining({
-                  ...ticketProviderApiToken,
-                }),
-              ]),
-            );
-          });
-        expect(response.status).toBe(HttpStatus.OK);
       });
   });
 
