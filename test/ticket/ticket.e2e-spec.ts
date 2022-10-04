@@ -49,6 +49,7 @@ describe('Ticket (e2e)', () => {
     const token = testHelper.setAuthenticatedAdmin(admin);
 
     const ticketData = {};
+
     await request(app.getHttpServer())
       .post('/api/v1/tickets')
       .send(ticketData)
@@ -108,6 +109,7 @@ describe('Ticket (e2e)', () => {
     const user = await UserFactory.create({ ticketProviderId: ticketProvider.id });
     const ticket = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
     const ticket2 = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
+
     await request(app.getHttpServer())
       .get(`/api/v1/tickets?limit=1`)
       .set('Accept', 'application/json')
@@ -122,6 +124,7 @@ describe('Ticket (e2e)', () => {
           ]),
         );
         const afterCursor = response.body.cursor.afterCursor;
+
         await request(app.getHttpServer())
           .get(`/api/v1/tickets?limit=1&afterCursor=${afterCursor}`)
           .set('Accept', 'application/json')
@@ -156,6 +159,7 @@ describe('Ticket (e2e)', () => {
       additionalData: JSON.stringify({ id: 0 }),
       ticketProviderId: ticketProvider.id,
     };
+
     await request(app.getHttpServer())
       .patch(`/api/v1/tickets/${ticket.id}`)
       .send(updatedTicket)
@@ -180,6 +184,7 @@ describe('Ticket (e2e)', () => {
     const ticketProvider = await TicketProviderFactory.create();
     const user = await UserFactory.create({ ticketProviderId: ticketProvider.id });
     const ticket = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
+
     await request(app.getHttpServer())
       .get(`/api/v1/tickets/${ticket.id}`)
       .set('Accept', 'application/json')
@@ -202,6 +207,7 @@ describe('Ticket (e2e)', () => {
     const ticketProvider = await TicketProviderFactory.create();
     const user = await UserFactory.create({ ticketProviderId: ticketProvider.id });
     const ticket = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
+
     await request(app.getHttpServer())
       .delete(`/api/v1/tickets/${ticket.id}`)
       .set('Accept', 'application/json')

@@ -14,13 +14,14 @@ import {
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TicketProviderService } from './ticket-provider.service';
 import { ApiResponseHelper } from '@src/common/helpers/api-response.helper';
-import { CreateTicketProviderValidationDto } from './dto/create.ticket-provider.validation.dto';
-import { UpdateTicketProviderValidationDto } from './dto/update.ticket-provider.validation.dto';
+import { CreateTicketProviderValidationDto } from './dto/create-ticket-provider.validation.dto';
+import { UpdateTicketProviderValidationDto } from './dto/update-ticket-provider.validation.dto';
 import { TicketProvider } from './ticket-provider.entity';
 import { PagingResult } from 'typeorm-cursor-pagination';
 import { TicketProviderFilterDto } from './dto/ticket-provider.filter.dto';
 import { PaginatedResult } from '@src/common/pagination/pagination.types';
 import { JwtAuthGuard } from '@src/auth/guards/jwt-auth.guard';
+
 @UseGuards(JwtAuthGuard)
 @Controller('ticket-providers')
 export class TicketProviderController {

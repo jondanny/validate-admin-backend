@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
-import { CreateUserValidationDto } from './dto/create.user.validation.dto';
-import { UpdateUserValidationDto } from './dto/update.user.validation.dto';
+import { CreateUserValidationDto } from './dto/create-user.validation.dto';
+import { UpdateUserValidationDto } from './dto/update-user.validation.dto';
 import { UserFilterDto } from './dto/user.filter.dto';
 import { PagingResult } from 'typeorm-cursor-pagination';
 
