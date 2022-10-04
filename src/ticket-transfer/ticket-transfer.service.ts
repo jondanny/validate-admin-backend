@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TicketService } from '@src/ticket/ticket.service';
 import { UserService } from '@src/user/user.service';
-import { CreateTicketTransferDto } from './dto/create-ticket-transfer.dto.';
+import { CreateTicketTransferDto } from './dto/create-ticket-transfer.dto';
 import { TicketTransfer } from './ticket-transfer.entity';
 import { TicketTransferRepository } from './ticket-transfer-repository';
 
@@ -21,14 +21,13 @@ export class TicketTransferService {
     return this.ticketTransferRepository.findOne({ where: { uuid } });
   }
 
-  async create(body: CreateTicketTransferDto, ticketProviderId: number): Promise<TicketTransfer> {
-    const userTo = await this.userService.findByUuid(body.userUuid);
-    const ticket = await this.ticketService.findByUuid(body.ticketUuid);
+  async create(createDto: CreateTicketTransferDto): Promise<TicketTransfer> {
+    const ticket = await this.ticketService.findById(createDto.ticketId);
     const entity: Partial<TicketTransfer> = {
-      ticketProviderId,
+      ticketProviderId: createDto.ticketProviderId,
       ticketId: ticket.id,
       userIdFrom: ticket.userId,
-      userIdTo: userTo.id,
+      userIdTo: createDto.userId,
     };
 
     const transfer = await this.ticketTransferRepository.save(entity, { reload: false });

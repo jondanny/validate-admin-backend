@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { TicketProvider } from '@src/ticket-provider/ticket-provider.entity';
-import { Allow, IsUUID, Validate } from 'class-validator';
-import { TicketExistsValidator } from '../validators/ticket-exists-validator';
-import { TicketUserExistsValidator } from '../../ticket/validators/ticket-user-exists-validator';
+import { IsInt, IsNotEmpty, IsUUID, Validate } from 'class-validator';
+import { TicketUserExistsValidator } from '@src/ticket/validators/ticket-user-exists-validator';
+import { Type } from 'class-transformer';
+import { TicketProviderExistsValidator } from '@src/ticket-provider/validators/ticket-provider-exists.validator';
+import { TicketExistsValidator } from '@src/ticket/validators/ticket-exists-validator';
 
 export class CreateTicketTransferDto {
   @ApiProperty({
@@ -12,17 +13,24 @@ export class CreateTicketTransferDto {
   })
   @IsUUID()
   @Validate(TicketUserExistsValidator)
-  userUuid: string;
+  userId: number;
 
   @ApiProperty({
     example: '5e9d96f9-7103-4b8b-b3c6-c37608e38305',
     required: true,
     description: `Ticket uuid`,
   })
-  @IsUUID()
+  @IsInt()
   @Validate(TicketExistsValidator)
-  ticketUuid: string;
+  ticketId: number;
 
-  @Allow()
-  ticketProvider: TicketProvider;
+  @ApiProperty({
+    example: 1,
+    required: false,
+  })
+  @Type(() => Number)
+  @IsNotEmpty()
+  @IsInt()
+  @Validate(TicketProviderExistsValidator)
+  ticketProviderId: number;
 }
