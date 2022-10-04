@@ -13,6 +13,7 @@ import { TicketModule } from './ticket/ticket.module';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
 import jwtConfig from './config/jwt.config';
+import { TicketProviderApiTokenModule } from './ticket-provider-api-token/ticket-provider-api-token.module';
 
 EnvHelper.verifyNodeEnv();
 
@@ -42,6 +43,7 @@ EnvHelper.verifyNodeEnv();
     TicketModule,
     AuthModule,
     AdminModule,
+    TicketProviderApiTokenModule,
   ],
   controllers: [AppController],
   providers: [AppService],

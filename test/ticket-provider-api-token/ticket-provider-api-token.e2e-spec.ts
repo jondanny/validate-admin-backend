@@ -6,8 +6,10 @@ import { AppDataSource } from '@src/config/datasource';
 import { TicketProviderFactory } from '@src/database/factories/ticket-provider.factory';
 import { AdminFactory } from '@src/database/factories/admin.factory';
 import { TestHelper } from '@test/helpers/test.helper';
+import { faker } from '@faker-js/faker';
+import { TicketProviderApiTokenFactory } from '@src/database/factories/ticket-provider-api-token.factory';
 
-describe('Ticket Provider (e2e)', () => {
+describe('Ticket Provider Api Token (e2e)', () => {
   let app: INestApplication;
   let moduleFixture: TestingModule;
   let testHelper: TestHelper;
@@ -35,47 +37,43 @@ describe('Ticket Provider (e2e)', () => {
   });
 
   it('Checks that endpoint throws unauthorized error', () => {
-    request(app.getHttpServer()).get('/api/v1/ticket-providers').expect(HttpStatus.UNAUTHORIZED);
-    request(app.getHttpServer()).get('/api/v1/ticket-providers/test').expect(HttpStatus.UNAUTHORIZED);
-    request(app.getHttpServer()).post('/api/v1/ticket-providers').expect(HttpStatus.UNAUTHORIZED);
-    request(app.getHttpServer()).patch('/api/v1/ticket-providers').expect(HttpStatus.UNAUTHORIZED);
-    request(app.getHttpServer()).delete('/api/v1/ticket-providers').expect(HttpStatus.UNAUTHORIZED);
+    request(app.getHttpServer()).get('/api/v1/ticket-provider-api-tokens').expect(HttpStatus.UNAUTHORIZED);
+    request(app.getHttpServer()).get('/api/v1/ticket-provider-api-tokens/test').expect(HttpStatus.UNAUTHORIZED);
+    request(app.getHttpServer()).post('/api/v1/ticket-provider-api-tokens').expect(HttpStatus.UNAUTHORIZED);
+    request(app.getHttpServer()).patch('/api/v1/ticket-provider-api-tokens').expect(HttpStatus.UNAUTHORIZED);
+    request(app.getHttpServer()).delete('/api/v1/ticket-provider-api-tokens').expect(HttpStatus.UNAUTHORIZED);
   });
 
-  it('Should post a ticket provider and return validation errors in response', async () => {
+  it('Should post a ticket provider api token and return validation errors in response', async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
-    const ticketProviderData = {
-      name: null,
-      email: null,
-    };
+    const ticketProviderApiTokenData = {};
+
     await request(app.getHttpServer())
-      .post('/api/v1/ticket-providers')
-      .send(ticketProviderData)
+      .post('/api/v1/ticket-provider-api-tokens')
+      .send(ticketProviderApiTokenData)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.body.message).toEqual(
-          expect.arrayContaining([
-            'name must be shorter than or equal to 128 characters',
-            'email must be shorter than or equal to 255 characters',
-          ]),
+          expect.arrayContaining(['ticketProviderId must be an integer number', 'Ticket provider is not valid.']),
         );
         expect(response.status).toBe(HttpStatus.BAD_REQUEST);
       });
   });
 
-  it(`should post a ticket provider and get it back in response`, async () => {
+  it(`should post a ticket provider api token and get it back in response`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
 
+    const ticketProvider = await TicketProviderFactory.create();
     const ticketProviderData = {
-      name: 'Muaaz Tausif',
-      email: 'muaaz@gmail.com',
+      token: faker.lorem.words(3),
+      ticketProviderId: ticketProvider.id,
     };
 
     await request(app.getHttpServer())
-      .post('/api/v1/ticket-providers')
+      .post('/api/v1/ticket-provider-api-tokens')
       .send(ticketProviderData)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
@@ -89,83 +87,43 @@ describe('Ticket Provider (e2e)', () => {
       });
   });
 
-  it(`should get ticket provider by pagination`, async () => {
+  it(`should get ticket provider api token by pagination`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
 
     const ticketProvider = await TicketProviderFactory.create();
-    const ticketProvider2 = await TicketProviderFactory.create();
+    const ticketProviderApiToken = await TicketProviderApiTokenFactory.create({ ticketProviderId: ticketProvider.id });
 
     await request(app.getHttpServer())
-      .get(`/api/v1/ticket-providers?limit=1`)
+      .get(`/api/v1/ticket-provider-api-tokens?limit=1`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then(async (response) => {
         expect(response.body.data).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              ...ticketProvider2,
+              ...ticketProviderApiToken,
             }),
           ]),
         );
-        const afterCursor = response.body.cursor.afterCursor;
-        await request(app.getHttpServer())
-          .get(`/api/v1/ticket-providers?limit=1&afterCursor=${afterCursor}`)
-          .set('Accept', 'application/json')
-          .set('Authorization', `Bearer ${token}`)
-          .then((response) => {
-            expect(response.body.data).toEqual(
-              expect.arrayContaining([
-                expect.objectContaining({
-                  ...ticketProvider,
-                }),
-              ]),
-            );
-          });
-        expect(response.status).toBe(HttpStatus.OK);
       });
   });
 
-  it('Should update a ticket provider and get updated data in response', async () => {
+  it(`should get a ticket provider api token by id`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
 
     const ticketProvider = await TicketProviderFactory.create();
-    const updatedTicketProvider = {
-      name: 'Muaaz Tausif',
-      email: 'muaaz@gmail.com',
-    };
+    const ticketProviderApiToken = await TicketProviderApiTokenFactory.create({ ticketProviderId: ticketProvider.id });
 
     await request(app.getHttpServer())
-      .patch(`/api/v1/ticket-providers/${ticketProvider.uuid}`)
-      .send(updatedTicketProvider)
+      .get(`/api/v1/ticket-provider-api-tokens/${ticketProviderApiToken.id}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.body).toEqual(
           expect.objectContaining({
-            id: ticketProvider.id,
-            ...updatedTicketProvider,
-          }),
-        );
-        expect(response.status).toBe(HttpStatus.OK);
-      });
-  });
-
-  it(`should get a ticket provider by id`, async () => {
-    const admin = await AdminFactory.create();
-    const token = testHelper.setAuthenticatedAdmin(admin);
-
-    const ticketProvider = await TicketProviderFactory.create();
-
-    await request(app.getHttpServer())
-      .get(`/api/v1/ticket-providers/${ticketProvider.uuid}`)
-      .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${token}`)
-      .then((response) => {
-        expect(response.body).toEqual(
-          expect.objectContaining({
-            ...ticketProvider,
+            ...ticketProviderApiToken,
           }),
         );
         expect(response.status).toBe(HttpStatus.OK);
@@ -177,9 +135,10 @@ describe('Ticket Provider (e2e)', () => {
     const token = testHelper.setAuthenticatedAdmin(admin);
 
     const ticketProvider = await TicketProviderFactory.create();
+    const ticketProviderApiToken = await TicketProviderApiTokenFactory.create({ ticketProviderId: ticketProvider.id });
 
     await request(app.getHttpServer())
-      .delete(`/api/v1/ticket-providers/${ticketProvider.uuid}`)
+      .delete(`/api/v1/ticket-provider-api-tokens/${ticketProviderApiToken.id}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
