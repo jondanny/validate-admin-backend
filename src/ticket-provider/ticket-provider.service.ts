@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { TicketProviderRepository } from './ticket-provider.repository';
 import { TicketProvider } from './ticket-provider.entity';
-import { CreateTicketProviderValidationDto } from './dto/create.ticket-provider.validation.dto';
-import { UpdateTicketProviderValidationDto } from './dto/update.ticket-provider.validation.dto';
+import { CreateTicketProviderValidationDto } from './dto/create-ticket-provider.validation.dto';
+import { UpdateTicketProviderValidationDto } from './dto/update-ticket-provider.validation.dto';
 import { TicketProviderFilterDto } from './dto/ticket-provider.filter.dto';
 import { PagingResult } from 'typeorm-cursor-pagination';
 

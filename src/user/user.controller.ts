@@ -14,8 +14,8 @@ import {
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { ApiResponseHelper } from '@src/common/helpers/api-response.helper';
-import { CreateUserValidationDto } from './dto/create.user.validation.dto';
-import { UpdateUserValidationDto } from './dto/update.user.validation.dto';
+import { CreateUserValidationDto } from './dto/create-user.validation.dto';
+import { UpdateUserValidationDto } from './dto/update-user.validation.dto';
 import { User } from './user.entity';
 import { PagingResult } from 'typeorm-cursor-pagination';
 import { UserFilterDto } from './dto/user.filter.dto';
