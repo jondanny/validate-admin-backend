@@ -57,7 +57,7 @@ export class TicketProviderController {
   @ApiResponse(ApiResponseHelper.validationError(`Validation failed (id is expected)`))
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.ticketProviderService.findByUuid(id);
+    return this.ticketProviderService.findById(id);
   }
 
   @ApiOperation({ description: `Delete a ticket providers` })
