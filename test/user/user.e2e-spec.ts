@@ -144,7 +144,7 @@ describe('User (e2e)', () => {
       phoneNumber: '+923214757374',
     };
     await request(app.getHttpServer())
-      .patch(`/api/v1/users/${user.uuid}`)
+      .patch(`/api/v1/users/${user.id}`)
       .send(updatedUser)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
@@ -165,7 +165,7 @@ describe('User (e2e)', () => {
     const user = await UserFactory.create();
 
     await request(app.getHttpServer())
-      .get(`/api/v1/users/${user.uuid}`)
+      .get(`/api/v1/users/${user.id}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
@@ -184,7 +184,7 @@ describe('User (e2e)', () => {
 
     const user = await UserFactory.create();
     await request(app.getHttpServer())
-      .delete(`/api/v1/users/${user.uuid}`)
+      .delete(`/api/v1/users/${user.id}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {

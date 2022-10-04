@@ -16,24 +16,24 @@ export class UserService {
     return this.userRepository.findOne({ where: { id: user.id } });
   }
 
-  async update(uuid: string, updateUserDto: UpdateUserValidationDto) {
-    await this.userRepository.update({ uuid: uuid }, updateUserDto);
+  async update(id: number, updateUserDto: UpdateUserValidationDto) {
+    await this.userRepository.update({ id: id }, updateUserDto);
 
-    return this.findByUuid(uuid);
+    return this.findById(id);
   }
 
   async findAllPaginated(searchParams: UserFilterDto): Promise<PagingResult<User>> {
     return this.userRepository.getPaginatedQueryBuilder(searchParams);
   }
 
-  async remove(uuid: string) {
-    await this.userRepository.softDelete({ uuid });
+  async remove(id: number) {
+    await this.userRepository.softDelete({ id });
 
     return;
   }
 
-  async findByUuid(uuid: string): Promise<User> {
-    return this.userRepository.findOne({ where: { uuid } });
+  async findById(id: number): Promise<User> {
+    return this.userRepository.findOne({ where: { id } });
   }
 
   async isUserExist(id: number): Promise<boolean> {
