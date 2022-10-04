@@ -5,7 +5,7 @@ import {
   Get,
   HttpStatus,
   Param,
-  ParseUUIDPipe,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -36,13 +36,13 @@ export class TicketProviderController {
 
   @ApiOperation({ description: `Update Ticket provider properties` })
   @ApiResponse(ApiResponseHelper.success(TicketProvider, HttpStatus.OK))
-  @ApiResponse(ApiResponseHelper.validationError(`Validation failed (uuid is expected)`))
-  @Patch(':uuid')
+  @ApiResponse(ApiResponseHelper.validationError(`Validation failed (id is expected)`))
+  @Patch(':id')
   async update(
-    @Param('uuid', ParseUUIDPipe) uuid: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateTicketProviderDto: UpdateTicketProviderValidationDto,
   ) {
-    return this.ticketProviderService.update(uuid, updateTicketProviderDto);
+    return this.ticketProviderService.update(id, updateTicketProviderDto);
   }
 
   @ApiOperation({ description: `Get all ticket providers with pagination` })
@@ -54,17 +54,17 @@ export class TicketProviderController {
 
   @ApiOperation({ description: `Get a ticket provider by id` })
   @ApiResponse(ApiResponseHelper.success(TicketProvider))
-  @ApiResponse(ApiResponseHelper.validationError(`Validation failed (uuid is expected)`))
-  @Get(':uuid')
-  async findOne(@Param('uuid', ParseUUIDPipe) uuid: string) {
-    return this.ticketProviderService.findByUuid(uuid);
+  @ApiResponse(ApiResponseHelper.validationError(`Validation failed (id is expected)`))
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.ticketProviderService.findByUuid(id);
   }
 
   @ApiOperation({ description: `Delete a ticket providers` })
   @ApiResponse(ApiResponseHelper.success(TicketProvider, HttpStatus.CREATED))
-  @ApiResponse(ApiResponseHelper.validationErrors(['Validation failed (uuid is expected)']))
-  @Delete(':uuid')
-  async delete(@Param('uuid', ParseUUIDPipe) uuid: string) {
-    return this.ticketProviderService.remove(uuid);
+  @ApiResponse(ApiResponseHelper.validationErrors(['Validation failed (id is expected)']))
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return this.ticketProviderService.remove(id);
   }
 }

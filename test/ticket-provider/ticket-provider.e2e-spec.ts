@@ -132,7 +132,7 @@ describe('Ticket Provider (e2e)', () => {
       email: 'muaaz@gmail.com',
     };
     await request(app.getHttpServer())
-      .patch(`/api/v1/ticket-providers/${ticketProvider.uuid}`)
+      .patch(`/api/v1/ticket-providers/${ticketProvider.id}`)
       .send(updatedTicketProvider)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
@@ -152,7 +152,7 @@ describe('Ticket Provider (e2e)', () => {
     const token = testHelper.setAuthenticatedAdmin(admin);
     const ticketProvider = await TicketProviderFactory.create();
     await request(app.getHttpServer())
-      .get(`/api/v1/ticket-providers/${ticketProvider.uuid}`)
+      .get(`/api/v1/ticket-providers/${ticketProvider.id}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
@@ -170,7 +170,7 @@ describe('Ticket Provider (e2e)', () => {
     const token = testHelper.setAuthenticatedAdmin(admin);
     const ticketProvider = await TicketProviderFactory.create();
     await request(app.getHttpServer())
-      .delete(`/api/v1/ticket-providers/${ticketProvider.uuid}`)
+      .delete(`/api/v1/ticket-providers/${ticketProvider.id}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
