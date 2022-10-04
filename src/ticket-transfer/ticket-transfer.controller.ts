@@ -15,7 +15,7 @@ import {
   import { ApiResponseHelper } from '@src/common/helpers/api-response.helper';
   import { RequestToBodyInterceptor } from '@src/common/interceptors/request-to-body.interceptor';
   import { AuthRequest } from '@src/common/types/auth.request';
-  import { CreateTicketTransferDto } from './dto/create-ticket-transfer.dto.';
+  import { CreateTicketTransferDto } from './dto/create-ticket-transfer.dto';
   import { TicketTransfer } from './ticket-transfer.entity';
   import { TicketTransferService } from './ticket-transfer.service';
   
