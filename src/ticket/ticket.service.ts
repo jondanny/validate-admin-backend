@@ -16,23 +16,23 @@ export class TicketService {
     return this.ticketRepository.findOne({ where: { id: ticket.id } });
   }
 
-  async update(uuid: string, updateTicketDto: UpdateTicketValidationDto) {
-    await this.ticketRepository.update({ uuid }, updateTicketDto);
+  async update(id: number, updateTicketDto: UpdateTicketValidationDto) {
+    await this.ticketRepository.update({ id }, updateTicketDto);
 
-    return this.findByUuid(uuid);
+    return this.findById(id);
   }
 
   async findAllPaginated(searchParams: TicketFilterDto): Promise<PagingResult<Ticket>> {
     return this.ticketRepository.getPaginatedQueryBuilder(searchParams);
   }
 
-  async remove(uuid: string) {
-    await this.ticketRepository.softDelete({ uuid });
+  async remove(id: number) {
+    await this.ticketRepository.softDelete({ id });
 
     return;
   }
 
-  async findByUuid(uuid: string): Promise<Ticket> {
-    return this.ticketRepository.findOne({ where: { uuid } });
+  async findById(id: number): Promise<Ticket> {
+    return this.ticketRepository.findOne({ where: { id } });
   }
 }

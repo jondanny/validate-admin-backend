@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TicketService } from './ticket.service';
 import { ApiResponseHelper } from '@src/common/helpers/api-response.helper';
@@ -23,9 +23,9 @@ export class TicketController {
   @ApiOperation({ description: `Update Ticket  properties` })
   @ApiResponse(ApiResponseHelper.success(Ticket, HttpStatus.OK))
   @ApiResponse(ApiResponseHelper.validationError(`Validation failed (uuid is expected)`))
-  @Patch(':uuid')
-  async update(@Param('uuid', ParseUUIDPipe) uuid: string, @Body() updateTicketDto: UpdateTicketValidationDto) {
-    return this.ticketService.update(uuid, updateTicketDto);
+  @Patch(':id')
+  async update(@Param('id', ParseIntPipe) id: number, @Body() updateTicketDto: UpdateTicketValidationDto) {
+    return this.ticketService.update(id, updateTicketDto);
   }
 
   @ApiOperation({ description: `Get all ticket s with pagination` })
@@ -38,16 +38,16 @@ export class TicketController {
   @ApiOperation({ description: `Get a ticket  by id` })
   @ApiResponse(ApiResponseHelper.success(Ticket))
   @ApiResponse(ApiResponseHelper.validationError(`Validation failed (uuid is expected)`))
-  @Get(':uuid')
-  async findOne(@Param('uuid', ParseUUIDPipe) uuid: string) {
-    return this.ticketService.findByUuid(uuid);
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.ticketService.findById(id);
   }
 
   @ApiOperation({ description: `Delete a ticket s` })
   @ApiResponse(ApiResponseHelper.success(Ticket, HttpStatus.CREATED))
   @ApiResponse(ApiResponseHelper.validationErrors(['Validation failed (uuid is expected)']))
-  @Delete(':uuid')
-  async delete(@Param('uuid', ParseUUIDPipe) uuid: string) {
-    return this.ticketService.remove(uuid);
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return this.ticketService.remove(id);
   }
 }
