@@ -8,7 +8,6 @@ import { Ticket } from '@src/ticket/ticket.entity';
 
 @Entity('ticket_transfer')
 export class TicketTransfer {
-  @Exclude({ toPlainOnly: true })
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 
@@ -16,19 +15,15 @@ export class TicketTransfer {
   @Column({ type: 'varchar', nullable: false, length: 36 })
   uuid: string;
 
-  @Exclude({ toPlainOnly: true })
   @Column({ type: 'int', nullable: false })
   userIdFrom: number;
 
-  @Exclude({ toPlainOnly: true })
   @Column({ type: 'int', nullable: false })
   userIdTo: number;
 
-  @Exclude({ toPlainOnly: true })
   @Column({ type: 'int', nullable: false })
   ticketId: number;
 
-  @Exclude({ toPlainOnly: true })
   @Column({ type: 'int', nullable: false })
   ticketProviderId: number;
 

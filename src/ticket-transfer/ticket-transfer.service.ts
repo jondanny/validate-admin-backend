@@ -19,8 +19,8 @@ export class TicketTransferService {
     return this.ticketTransferRepository.findOne({ where: { uuid, ticketProviderId } });
   }
 
-  async findByUuid(uuid: string): Promise<TicketTransfer> {
-    return this.ticketTransferRepository.findOne({ where: { uuid } });
+  async findById(id: number): Promise<TicketTransfer> {
+    return this.ticketTransferRepository.findOne({ where: { id } });
   }
 
   async create(createDto: CreateTicketTransferDto): Promise<TicketTransfer> {
@@ -32,9 +32,9 @@ export class TicketTransferService {
       userIdTo: createDto.userId,
     };
 
-    const transfer = await this.ticketTransferRepository.save(entity, { reload: false });
+    const transfer = await this.ticketTransferRepository.save(entity);
 
-    return this.findByUuid(transfer.uuid);
+    return this.findById(transfer.id);
   }
 
   async findAllPaginated(searchParams: TicketTransferFilterDto): Promise<PagingResult<TicketTransfer>> {

@@ -9,6 +9,7 @@ import { TicketProviderFactory } from '@src/database/factories/ticket-provider.f
 import { UserFactory } from '@src/database/factories/user.factory';
 import { AdminFactory } from '@src/database/factories/admin.factory';
 import { TicketTransferFactory } from '@src/database/factories/ticket-transfer.factory';
+import { TicketTransferStatus } from '@src/ticket-transfer/ticket-transfer.types';
 
 describe('Ticket Transfer (e2e)', () => {
   let app: INestApplication;
@@ -65,16 +66,17 @@ describe('Ticket Transfer (e2e)', () => {
       });
   });
 
-  it(`should post a ticket and get it back in response`, async () => {
+  it(`should post a ticket transfer data and get successful data back in response`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
 
     const ticketProvider = await TicketProviderFactory.create();
     const user = await UserFactory.create({ ticketProviderId: ticketProvider.id });
+    const user2 = await UserFactory.create({ ticketProviderId: ticketProvider.id });
     const ticket = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
 
     const ticketTransfer = {
-      userId: user.id,
+      userId: user2.id,
       ticketProviderId: ticketProvider.id,
       ticketId: ticket.id,
     };
@@ -87,10 +89,11 @@ describe('Ticket Transfer (e2e)', () => {
       .then((response) => {
         expect(response.body).toEqual(
           expect.objectContaining({
-            uuid: response.body.uuid,
-            createdAt: response.body.createdAt,
-            status: response.body.status,
-            finishedAt: null,
+            ticketId: ticket.id,
+            ticketProviderId: ticketProvider.id,
+            userIdFrom: user.id,
+            userIdTo: user2.id,
+            status: TicketTransferStatus.InProgress,
           }),
         );
         expect(response.status).toBe(HttpStatus.CREATED);
@@ -104,12 +107,12 @@ describe('Ticket Transfer (e2e)', () => {
     const ticketProvider = await TicketProviderFactory.create();
     const user = await UserFactory.create({ ticketProviderId: ticketProvider.id });
     const user2 = await UserFactory.create({ ticketProviderId: ticketProvider.id });
-    const ticket2 = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
+    const ticket = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
 
     const ticket_transfer_2 = await TicketTransferFactory.create({
       ticketProviderId: ticketProvider.id,
       userIdTo: user2.id,
-      ticketId: ticket2.id,
+      ticketId: ticket.id,
       userIdFrom: user.id,
     });
 
@@ -118,48 +121,39 @@ describe('Ticket Transfer (e2e)', () => {
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then(async (response) => {
-        console.log('this is the response: ', { body: response.body.data });
         expect(response.body.data).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              id: response.body.id,
-              uuid: response.body.uuid,
-              userIdFrom: response.body.userIdFrom,
-              userIdTo: response.body.userIdTo,
-              ticketId: response.body.ticketId,
-              ticketProviderId: response.body.ticketProviderId,
-              createdAt: response.body.createdAt,
-              finishedAt: response.body.finishedAt,
-              status: response.body.status,
+              ...ticket_transfer_2,
             }),
           ]),
         );
       });
   });
 
-  it(`should get a ticket by uuid`, async () => {
+  it(`should get a ticket transfer data by id`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
 
     const ticketProvider = await TicketProviderFactory.create();
     const user = await UserFactory.create({ ticketProviderId: ticketProvider.id });
+    const user2 = await UserFactory.create({ ticketProviderId: ticketProvider.id });
     const ticket = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
     const ticket_transfer = await TicketTransferFactory.create({
       ticketProviderId: ticketProvider.id,
-      userIdTo: user.id,
+      userIdFrom: user.id,
+      userIdTo: user2.id,
       ticketId: ticket.id,
     });
 
     await request(app.getHttpServer())
-      .get(`/api/v1/ticket-transfers/${ticket_transfer.uuid}`)
+      .get(`/api/v1/ticket-transfers/${ticket_transfer.id}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
-        console.log('\n\n\n\n\nthis is the response: ', { response });
         expect(response.body).toEqual(
           expect.objectContaining({
             ...ticket_transfer,
-            // additionalData: JSON.parse(ticket.additionalData),
           }),
         );
         expect(response.status).toBe(HttpStatus.OK);

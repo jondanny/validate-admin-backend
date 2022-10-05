@@ -6,6 +6,7 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  ParseIntPipe,
   ParseUUIDPipe,
   Post,
   Query,
@@ -33,9 +34,9 @@ export class TicketTransferController {
   @ApiResponse(ApiResponseHelper.success(TicketTransfer))
   @ApiResponse(ApiResponseHelper.notFound('Ticket transfer not found'))
   @ApiResponse(ApiResponseHelper.validationErrors(['Validation failed (uuid is expected)']))
-  @Get(':uuid')
-  async findOne(@Param('uuid', ParseUUIDPipe) uuid: string): Promise<TicketTransfer> {
-    const ticketTransfer = await this.ticketTransferService.findByUuid(uuid);
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<TicketTransfer> {
+    const ticketTransfer = await this.ticketTransferService.findById(id);
 
     if (!ticketTransfer) {
       throw new NotFoundException('Ticket transfer not found');
