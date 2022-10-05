@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { TicketTransfer } from './ticket-transfer.entity';
 import { buildPaginator, PagingResult } from 'typeorm-cursor-pagination';
-import { TicketTransferFilterDto } from './dto/ticket-transfer.filter.dto'
+import { TicketTransferFilterDto } from './dto/ticket-transfer.filter.dto';
 
 @Injectable()
 export class TicketTransferRepository extends Repository<TicketTransfer> {
@@ -12,14 +12,15 @@ export class TicketTransferRepository extends Repository<TicketTransfer> {
 
   async getPaginatedQueryBuilder(searchParams: TicketTransferFilterDto): Promise<PagingResult<TicketTransfer>> {
     const queryBuilder = this.createQueryBuilder('ticket_transfer');
-    let paginationKeys = [searchParams.orderParam];
-    searchParams["uuid"] ? paginationKeys.push("uuid") : paginationKeys.push("id")
+
+    if ('uuid' in searchParams) {
+      queryBuilder.andWhere({ uuid: searchParams.uuid });
+    }
 
     const paginator = buildPaginator({
       entity: TicketTransfer,
-      alias: "ticket_transfer",
-      // paginationKeys: ['id', searchParams.orderParam],
-      paginationKeys,
+      alias: 'ticket_transfer',
+      paginationKeys: ['id', searchParams.orderParam],
       query: {
         limit: searchParams.limit,
         order: searchParams.orderType,

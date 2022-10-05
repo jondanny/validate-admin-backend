@@ -10,6 +10,6 @@ export class TicketExistsValidator implements ValidatorConstraintInterface {
   }
 
   defaultMessage() {
-    return `Ticket provider is not valid.`;
+    return `Ticket is not valid.`;
   }
 }

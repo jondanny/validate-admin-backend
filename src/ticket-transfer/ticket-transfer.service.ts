@@ -5,7 +5,7 @@ import { CreateTicketTransferDto } from './dto/create-ticket-transfer.dto';
 import { TicketTransfer } from './ticket-transfer.entity';
 import { TicketTransferRepository } from './ticket-transfer-repository';
 import { PagingResult } from 'typeorm-cursor-pagination';
-import { TicketTransferFilterDto } from './dto/ticket-transfer.filter.dto'
+import { TicketTransferFilterDto } from './dto/ticket-transfer.filter.dto';
 
 @Injectable()
 export class TicketTransferService {
@@ -37,7 +37,7 @@ export class TicketTransferService {
     return this.findByUuid(transfer.uuid);
   }
 
-  async findAllPaginated(searchParams: TicketTransferFilterDto): Promise<PagingResult<TicketTransfer>>{
+  async findAllPaginated(searchParams: TicketTransferFilterDto): Promise<PagingResult<TicketTransfer>> {
     return this.ticketTransferRepository.getPaginatedQueryBuilder(searchParams);
   }
 }

@@ -47,16 +47,16 @@ export class ApiResponseHelper {
     return { status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized', schema: { example: schemaExample } };
   }
 
-  static notFound( notFoundError = 'Not found' ): ApiResponseOptions {
+  static notFound(notFoundError = 'Not found'): ApiResponseOptions {
     const schemaExample = {
       statusCode: HttpStatus.NOT_FOUND,
       error: notFoundError,
     };
+
     return {
       status: HttpStatus.NOT_FOUND,
       description: 'Successfully created',
-      schema: { example: schemaExample }
-    }
-
+      schema: { example: schemaExample },
+    };
   }
 }

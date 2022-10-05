@@ -9,21 +9,22 @@ import {
   ParseUUIDPipe,
   Post,
   Query,
-  Req,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ApiResponseHelper } from '@src/common/helpers/api-response.helper';
 import { RequestToBodyInterceptor } from '@src/common/interceptors/request-to-body.interceptor';
-import { AuthRequest } from '@src/common/types/auth.request';
 import { CreateTicketTransferDto } from './dto/create-ticket-transfer.dto';
 import { TicketTransfer } from './ticket-transfer.entity';
 import { TicketTransferService } from './ticket-transfer.service';
 import { PaginatedResult } from '@src/common/pagination/pagination.types';
 import { TicketTransferFilterDto } from './dto/ticket-transfer.filter.dto';
-import { PagingResult } from 'typeorm-cursor-pagination'
+import { PagingResult } from 'typeorm-cursor-pagination';
+import { JwtAuthGuard } from '@src/auth/guards/jwt-auth.guard';
 
 @ApiResponse(ApiResponseHelper.unauthorized())
+@UseGuards(JwtAuthGuard)
 @Controller('ticket-transfers')
 export class TicketTransferController {
   constructor(private readonly ticketTransferService: TicketTransferService) {}
@@ -43,7 +44,7 @@ export class TicketTransferController {
     return ticketTransfer;
   }
 
-  @ApiOperation({description: "Get All ticket transfers"})
+  @ApiOperation({ description: 'Get All ticket transfers' })
   @ApiResponse(ApiResponseHelper.success(PaginatedResult<TicketTransfer>))
   @Get()
   async findAllPaginated(@Query() searchParams: TicketTransferFilterDto): Promise<PagingResult<TicketTransfer>> {
@@ -56,7 +57,6 @@ export class TicketTransferController {
   @UseInterceptors(ClassSerializerInterceptor, new RequestToBodyInterceptor('ticketProvider', 'ticketProvider'))
   @Post()
   async create(@Body() createDto: CreateTicketTransferDto): Promise<TicketTransfer> {
-    console.log("main controller: ", {createDto})
     return this.ticketTransferService.create(createDto);
   }
 }

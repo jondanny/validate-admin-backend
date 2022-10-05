@@ -21,6 +21,7 @@ import { PagingResult } from 'typeorm-cursor-pagination';
 import { UserFilterDto } from './dto/user.filter.dto';
 import { PaginatedResult } from '@src/common/pagination/pagination.types';
 import { JwtAuthGuard } from '@src/auth/guards/jwt-auth.guard';
+@ApiResponse(ApiResponseHelper.unauthorized())
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UserController {

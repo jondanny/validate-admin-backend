@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsNotEmpty, Validate } from 'class-validator';
-import { TicketUserExistsValidator } from '@src/ticket/validators/ticket-user-exists-validator';
 import { Type } from 'class-transformer';
 import { TicketProviderExistsValidator } from '@src/ticket-provider/validators/ticket-provider-exists.validator';
 import { TicketExistsValidator } from '@src/ticket/validators/ticket-exists-validator';
+import { UserExistsValidator } from '@src/user/validators/user-exists.validator';
 
 export class CreateTicketTransferDto {
   @ApiProperty({
@@ -13,7 +13,7 @@ export class CreateTicketTransferDto {
   })
   @Type(() => Number)
   @IsInt()
-  @Validate(TicketUserExistsValidator)
+  @Validate(UserExistsValidator)
   userId: number;
 
   @ApiProperty({
