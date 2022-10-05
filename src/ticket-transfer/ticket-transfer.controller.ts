@@ -8,6 +8,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
   Req,
   UseInterceptors,
 } from '@nestjs/common';
@@ -18,6 +19,9 @@ import { AuthRequest } from '@src/common/types/auth.request';
 import { CreateTicketTransferDto } from './dto/create-ticket-transfer.dto';
 import { TicketTransfer } from './ticket-transfer.entity';
 import { TicketTransferService } from './ticket-transfer.service';
+import { PaginatedResult } from '@src/common/pagination/pagination.types';
+import { TicketTransferFilterDto } from './dto/ticket-transfer.filter.dto';
+import { PagingResult } from 'typeorm-cursor-pagination'
 
 @ApiResponse(ApiResponseHelper.unauthorized())
 @Controller('ticket-transfers')
@@ -39,12 +43,20 @@ export class TicketTransferController {
     return ticketTransfer;
   }
 
+  @ApiOperation({description: "Get All ticket transfers"})
+  @ApiResponse(ApiResponseHelper.success(PaginatedResult<TicketTransfer>))
+  @Get()
+  async findAllPaginated(@Query() searchParams: TicketTransferFilterDto): Promise<PagingResult<TicketTransfer>> {
+    return this.ticketTransferService.findAllPaginated(searchParams);
+  }
+
   @ApiOperation({ description: `Transfer ticket to another user` })
   @ApiResponse(ApiResponseHelper.success(TicketTransfer, HttpStatus.CREATED))
   @ApiResponse(ApiResponseHelper.validationErrors(['Validation failed (uuid is expected)']))
   @UseInterceptors(ClassSerializerInterceptor, new RequestToBodyInterceptor('ticketProvider', 'ticketProvider'))
   @Post()
   async create(@Body() createDto: CreateTicketTransferDto): Promise<TicketTransfer> {
+    console.log("main controller: ", {createDto})
     return this.ticketTransferService.create(createDto);
   }
 }
