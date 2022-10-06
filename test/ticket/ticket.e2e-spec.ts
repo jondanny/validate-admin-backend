@@ -161,7 +161,7 @@ describe('Ticket (e2e)', () => {
     };
 
     await request(app.getHttpServer())
-      .patch(`/api/v1/tickets/${ticket.uuid}`)
+      .patch(`/api/v1/tickets/${ticket.id}`)
       .send(updatedTicket)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
@@ -186,7 +186,7 @@ describe('Ticket (e2e)', () => {
     const ticket = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
 
     await request(app.getHttpServer())
-      .get(`/api/v1/tickets/${ticket.uuid}`)
+      .get(`/api/v1/tickets/${ticket.id}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
@@ -209,7 +209,7 @@ describe('Ticket (e2e)', () => {
     const ticket = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
 
     await request(app.getHttpServer())
-      .delete(`/api/v1/tickets/${ticket.uuid}`)
+      .delete(`/api/v1/tickets/${ticket.id}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
