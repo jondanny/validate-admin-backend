@@ -36,10 +36,6 @@ export class TicketService {
     return this.ticketRepository.findOne({ where: { id } });
   }
 
-  async findById(id: number): Promise<Ticket> {
-    return this.ticketRepository.findOne({ where: { id } });
-  }
-
   async isTicketExist(id: number): Promise<boolean> {
     const ticket = await this.ticketRepository.findOne({ where: { id } });
 
