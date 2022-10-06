@@ -36,6 +36,14 @@ export class UserService {
     return this.userRepository.findOne({ where: { id } });
   }
 
+  async findByUuid(uuid: string): Promise<User> {
+    return this.userRepository.findOne({ where: { uuid } });
+  }
+
+  async findByUserIdAndTicketProviderId(userId: number, ticketProviderId: number): Promise<User> {
+    return this.userRepository.findOne({ where: { id: userId, ticketProviderId } });
+  }
+
   async isUserExist(id: number): Promise<boolean> {
     const user = await this.userRepository.findOne({ where: { id } });
 

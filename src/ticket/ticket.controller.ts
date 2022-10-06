@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TicketService } from './ticket.service';
 import { ApiResponseHelper } from '@src/common/helpers/api-response.helper';
@@ -8,7 +20,10 @@ import { Ticket } from './ticket.entity';
 import { PagingResult } from 'typeorm-cursor-pagination';
 import { TicketFilterDto } from './dto/ticket.filter.dto';
 import { PaginatedResult } from '@src/common/pagination/pagination.types';
+import { JwtAuthGuard } from '@src/auth/guards/jwt-auth.guard';
 
+@ApiResponse(ApiResponseHelper.unauthorized())
+@UseGuards(JwtAuthGuard)
 @Controller('tickets')
 export class TicketController {
   constructor(private readonly ticketService: TicketService) {}

@@ -10,6 +10,8 @@ import { TicketController } from './ticket.controller';
 import { Ticket } from './ticket.entity';
 import { TicketRepository } from './ticket.repository';
 import { TicketService } from './ticket.service';
+import { TicketValidator } from './ticket.validator';
+import { TicketExistsValidator } from './validators/ticket-exists-validator';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Ticket]), UserModule, TicketProviderModule],
@@ -19,6 +21,8 @@ import { TicketService } from './ticket.service';
     TicketRepository,
     UserValidator,
     UserExistsValidator,
+    TicketValidator,
+    TicketExistsValidator,
     TicketProviderValidator,
     TicketProviderExistsValidator,
   ],

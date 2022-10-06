@@ -22,6 +22,7 @@ import { TicketProviderFilterDto } from './dto/ticket-provider.filter.dto';
 import { PaginatedResult } from '@src/common/pagination/pagination.types';
 import { JwtAuthGuard } from '@src/auth/guards/jwt-auth.guard';
 
+@ApiResponse(ApiResponseHelper.unauthorized())
 @UseGuards(JwtAuthGuard)
 @Controller('ticket-providers')
 export class TicketProviderController {
