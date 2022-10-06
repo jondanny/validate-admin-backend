@@ -109,7 +109,7 @@ describe('Ticket Transfer (e2e)', () => {
     const user2 = await UserFactory.create({ ticketProviderId: ticketProvider.id });
     const ticket = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
 
-    const ticket_transfer_2 = await TicketTransferFactory.create({
+    const ticketTransfer2 = await TicketTransferFactory.create({
       ticketProviderId: ticketProvider.id,
       userIdTo: user2.id,
       ticketId: ticket.id,
@@ -124,7 +124,7 @@ describe('Ticket Transfer (e2e)', () => {
         expect(response.body.data).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              ...ticket_transfer_2,
+              ...ticketTransfer2,
             }),
           ]),
         );
@@ -139,7 +139,7 @@ describe('Ticket Transfer (e2e)', () => {
     const user = await UserFactory.create({ ticketProviderId: ticketProvider.id });
     const user2 = await UserFactory.create({ ticketProviderId: ticketProvider.id });
     const ticket = await TicketFactory.create({ ticketProviderId: ticketProvider.id, userId: user.id });
-    const ticket_transfer = await TicketTransferFactory.create({
+    const ticketTransfer = await TicketTransferFactory.create({
       ticketProviderId: ticketProvider.id,
       userIdFrom: user.id,
       userIdTo: user2.id,
@@ -147,13 +147,13 @@ describe('Ticket Transfer (e2e)', () => {
     });
 
     await request(app.getHttpServer())
-      .get(`/api/v1/ticket-transfers/${ticket_transfer.id}`)
+      .get(`/api/v1/ticket-transfers/${ticketTransfer.id}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.body).toEqual(
           expect.objectContaining({
-            ...ticket_transfer,
+            ...ticketTransfer,
           }),
         );
         expect(response.status).toBe(HttpStatus.OK);
