@@ -5,12 +5,12 @@ import { TicketProvider } from '../ticket-provider.entity';
 import { TicketProviderStatus } from '../ticket-provider.types';
 
 export class TicketProviderFilterDto extends CursorFilterDto {
-  @ApiProperty({ example: 'platinum', required: true })
+  @ApiProperty({ example: 'platinum', required: false })
   @IsOptional()
   @IsString()
   searchText: string;
 
-  @ApiProperty({ example: TicketProviderStatus.Active, required: true })
+  @ApiProperty({ example: TicketProviderStatus.Active, required: false })
   @IsOptional()
   @IsEnum(TicketProviderStatus)
   status: TicketProviderStatus;
