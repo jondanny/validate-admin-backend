@@ -14,7 +14,7 @@ export class UserFilterDto extends CursorFilterDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
-  ticketProviderId: string;
+  ticketProviderId: number;
 
   @ApiProperty({ example: 'createdAt', enum: ['createdAt'], required: false })
   @IsOptional()

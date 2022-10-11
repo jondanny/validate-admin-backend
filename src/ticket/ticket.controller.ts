@@ -23,7 +23,7 @@ import { PaginatedResult } from '@src/common/pagination/pagination.types';
 import { JwtAuthGuard } from '@src/auth/guards/jwt-auth.guard';
 
 @ApiResponse(ApiResponseHelper.unauthorized())
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('tickets')
 export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
