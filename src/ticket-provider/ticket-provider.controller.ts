@@ -54,6 +54,13 @@ export class TicketProviderController {
     return this.ticketProviderService.findAllPaginated(searchParams);
   }
 
+  @ApiOperation({ description: `Get all ticket provider ` })
+  @ApiResponse(ApiResponseHelper.success([TicketProvider]))
+  @Get('/get-all')
+  async findMany() {
+    return this.ticketProviderService.findMany();
+  }
+
   @ApiOperation({ description: `Get a ticket provider by id` })
   @ApiResponse(ApiResponseHelper.success(TicketProvider))
   @ApiResponse(ApiResponseHelper.validationError(`Validation failed (id is expected)`))

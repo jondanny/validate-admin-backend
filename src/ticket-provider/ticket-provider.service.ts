@@ -22,6 +22,10 @@ export class TicketProviderService {
     return this.findById(id);
   }
 
+  async findMany(): Promise<TicketProvider[]> {
+    return this.ticketProviderRepository.find();
+  }
+
   async findAllPaginated(searchParams: TicketProviderFilterDto): Promise<PagingResult<TicketProvider>> {
     return this.ticketProviderRepository.getPaginatedQueryBuilder(searchParams);
   }

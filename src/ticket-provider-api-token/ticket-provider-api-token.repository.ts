@@ -13,7 +13,11 @@ export class TicketProviderApiTokenRepository extends Repository<TicketProviderA
   async getPaginatedQueryBuilder(
     searchParams: TicketProviderApiTokenFilterDto,
   ): Promise<PagingResult<TicketProviderApiToken>> {
-    const queryBuilder = this.createQueryBuilder('ticket_provider_api_token');
+    const queryBuilder = this.createQueryBuilder('ticket_provider_api_token').leftJoinAndMapOne(
+      'ticket_provider_api_token.ticketProvider',
+      'ticket_provider_api_token.ticketProvider',
+      'ticket_provider',
+    );
 
     const paginator = buildPaginator({
       entity: TicketProviderApiToken,

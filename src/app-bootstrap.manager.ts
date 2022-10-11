@@ -29,6 +29,8 @@ export class AppBootstrapManager {
         }),
       );
 
+    app.enableCors();
+
     return app;
   }
 }
