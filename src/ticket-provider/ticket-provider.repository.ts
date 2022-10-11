@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Like, Repository } from 'typeorm';
 import { buildPaginator, PagingResult } from 'typeorm-cursor-pagination';
 import { TicketProviderFilterDto } from './dto/ticket-provider.filter.dto';
 import { TicketProvider } from './ticket-provider.entity';
@@ -15,6 +15,10 @@ export class TicketProviderRepository extends Repository<TicketProvider> {
 
     if ('status' in searchParams) {
       queryBuilder.andWhere({ status: searchParams.status });
+    }
+
+    if ('searchText' in searchParams) {
+      queryBuilder.andWhere({ name: Like(`%${searchParams.searchText}%`) });
     }
 
     const paginator = buildPaginator({
