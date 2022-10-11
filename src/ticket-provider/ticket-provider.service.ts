@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { TicketProviderRepository } from './ticket-provider.repository';
 import { TicketProvider } from './ticket-provider.entity';
-import { CreateTicketProviderValidationDto } from './dto/create.ticket-provider.validation.dto';
-import { UpdateTicketProviderValidationDto } from './dto/update.ticket-provider.validation.dto';
+import { CreateTicketProviderValidationDto } from './dto/create-ticket-provider.validation.dto';
+import { UpdateTicketProviderValidationDto } from './dto/update-ticket-provider.validation.dto';
 import { TicketProviderFilterDto } from './dto/ticket-provider.filter.dto';
 import { PagingResult } from 'typeorm-cursor-pagination';
 
@@ -16,24 +16,24 @@ export class TicketProviderService {
     return this.ticketProviderRepository.findOne({ where: { id: ticketProvider.id } });
   }
 
-  async update(uuid: string, updateTicketProviderDto: UpdateTicketProviderValidationDto) {
-    await this.ticketProviderRepository.update({ uuid }, updateTicketProviderDto);
+  async update(id: number, updateTicketProviderDto: UpdateTicketProviderValidationDto) {
+    await this.ticketProviderRepository.update({ id }, updateTicketProviderDto);
 
-    return this.findByUuid(uuid);
+    return this.findById(id);
   }
 
   async findAllPaginated(searchParams: TicketProviderFilterDto): Promise<PagingResult<TicketProvider>> {
     return this.ticketProviderRepository.getPaginatedQueryBuilder(searchParams);
   }
 
-  async remove(uuid: string) {
-    await this.ticketProviderRepository.softDelete({ uuid });
+  async remove(id: number) {
+    await this.ticketProviderRepository.softDelete({ id });
 
     return;
   }
 
-  async findByUuid(uuid: string): Promise<TicketProvider> {
-    return this.ticketProviderRepository.findOne({ where: { uuid } });
+  async findById(id: number): Promise<TicketProvider> {
+    return this.ticketProviderRepository.findOne({ where: { id } });
   }
 
   async isTicketProviderExist(id: number): Promise<boolean> {

@@ -46,12 +46,14 @@ describe('User (e2e)', () => {
   it('Should post a user and return validation errors in response', async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
+
     const userData = {
       name: null,
       email: null,
       phoneNumber: null,
       ticketProviderId: null,
     };
+
     await request(app.getHttpServer())
       .post('/api/v1/users')
       .send(userData)
@@ -74,6 +76,7 @@ describe('User (e2e)', () => {
   it(`should post a user and get it back in response`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
+
     const ticketProvider = await TicketProviderFactory.create();
     const userData = {
       name: 'My event 1',
@@ -100,6 +103,7 @@ describe('User (e2e)', () => {
   it(`should get users by pagination`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
+
     const user = await UserFactory.create();
     const user2 = await UserFactory.create();
 
@@ -116,6 +120,7 @@ describe('User (e2e)', () => {
           ]),
         );
         const afterCursor = response.body.cursor.afterCursor;
+
         await request(app.getHttpServer())
           .get(`/api/v1/users?limit=1&afterCursor=${afterCursor}`)
           .set('Accept', 'application/json')
@@ -143,8 +148,9 @@ describe('User (e2e)', () => {
       email: 'muaaz@gmail.com',
       phoneNumber: '+923214757374',
     };
+
     await request(app.getHttpServer())
-      .patch(`/api/v1/users/${user.uuid}`)
+      .patch(`/api/v1/users/${user.id}`)
       .send(updatedUser)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
@@ -162,10 +168,11 @@ describe('User (e2e)', () => {
   it(`should get a user by id`, async () => {
     const admin = await AdminFactory.create();
     const token = testHelper.setAuthenticatedAdmin(admin);
+
     const user = await UserFactory.create();
 
     await request(app.getHttpServer())
-      .get(`/api/v1/users/${user.uuid}`)
+      .get(`/api/v1/users/${user.id}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
@@ -183,8 +190,9 @@ describe('User (e2e)', () => {
     const token = testHelper.setAuthenticatedAdmin(admin);
 
     const user = await UserFactory.create();
+
     await request(app.getHttpServer())
-      .delete(`/api/v1/users/${user.uuid}`)
+      .delete(`/api/v1/users/${user.id}`)
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {

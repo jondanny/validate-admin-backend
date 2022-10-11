@@ -1,5 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, Column, PrimaryGeneratedColumn, Generated, DeleteDateColumn } from 'typeorm';
+import { TicketProviderApiToken } from '@src/ticket-provider-api-token/ticket-provider-api-token.entity';
+import { Ticket } from '@src/ticket/ticket.entity';
+import { User } from '@src/user/user.entity';
+import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn, JoinColumn, OneToMany } from 'typeorm';
 import { TicketProviderStatus } from './ticket-provider.types';
 
 @Entity('ticket_provider')
@@ -34,4 +37,16 @@ export class TicketProvider {
   @ApiProperty({ description: 'Date when Ticket provider was deleted', required: true })
   @DeleteDateColumn({ type: 'datetime', nullable: true })
   deletedAt?: Date;
+
+  @OneToMany(() => TicketProviderApiToken, (ticketProviderApiToken) => ticketProviderApiToken.ticketProvider)
+  @JoinColumn({ name: 'id', referencedColumnName: 'ticket_provider_id' })
+  apiTokens: TicketProviderApiToken[];
+
+  @OneToMany(() => Ticket, (ticket) => ticket.ticketProvider)
+  @JoinColumn({ name: 'id', referencedColumnName: 'ticket_provider_id' })
+  tickets: Ticket[];
+
+  @OneToMany(() => User, (user) => user.ticketProvider)
+  @JoinColumn({ name: 'id', referencedColumnName: 'ticket_provider_id' })
+  users: User[];
 }

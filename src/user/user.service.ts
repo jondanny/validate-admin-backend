@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
-import { CreateUserValidationDto } from './dto/create.user.validation.dto';
-import { UpdateUserValidationDto } from './dto/update.user.validation.dto';
+import { CreateUserValidationDto } from './dto/create-user.validation.dto';
+import { UpdateUserValidationDto } from './dto/update-user.validation.dto';
 import { UserFilterDto } from './dto/user.filter.dto';
 import { PagingResult } from 'typeorm-cursor-pagination';
 
@@ -16,24 +16,32 @@ export class UserService {
     return this.userRepository.findOne({ where: { id: user.id } });
   }
 
-  async update(uuid: string, updateUserDto: UpdateUserValidationDto) {
-    await this.userRepository.update({ uuid: uuid }, updateUserDto);
+  async update(id: number, updateUserDto: UpdateUserValidationDto) {
+    await this.userRepository.update({ id: id }, updateUserDto);
 
-    return this.findByUuid(uuid);
+    return this.findById(id);
   }
 
   async findAllPaginated(searchParams: UserFilterDto): Promise<PagingResult<User>> {
     return this.userRepository.getPaginatedQueryBuilder(searchParams);
   }
 
-  async remove(uuid: string) {
-    await this.userRepository.softDelete({ uuid });
+  async remove(id: number) {
+    await this.userRepository.softDelete({ id });
 
     return;
   }
 
+  async findById(id: number): Promise<User> {
+    return this.userRepository.findOne({ where: { id } });
+  }
+
   async findByUuid(uuid: string): Promise<User> {
     return this.userRepository.findOne({ where: { uuid } });
+  }
+
+  async findByUserIdAndTicketProviderId(userId: number, ticketProviderId: number): Promise<User> {
+    return this.userRepository.findOne({ where: { id: userId, ticketProviderId } });
   }
 
   async isUserExist(id: number): Promise<boolean> {
