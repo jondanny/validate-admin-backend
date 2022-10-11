@@ -2,10 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsIn, IsInt, IsOptional, IsString } from 'class-validator';
 import { CursorFilterDto } from '@src/common/pagination/cursor-filter.dto';
 import { Ticket } from '../ticket.entity';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
+import { ValidateHelper } from '@src/helpers/validate-helper';
 
 export class TicketFilterDto extends CursorFilterDto {
   @ApiProperty({ example: 'platinum', required: false })
+  @Transform(({ value }) => ValidateHelper.sanitize(value))
   @IsOptional()
   @IsString()
   searchText: string;
