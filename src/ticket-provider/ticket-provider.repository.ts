@@ -18,7 +18,10 @@ export class TicketProviderRepository extends Repository<TicketProvider> {
     }
 
     if ('searchText' in searchParams) {
-      queryBuilder.andWhere({ name: Like(`%${searchParams.searchText}%`) });
+      queryBuilder.andWhere([
+        { name: Like(`%${searchParams.searchText}%`) },
+        { email: Like(`%${searchParams.searchText}%`) },
+      ]);
     }
 
     const paginator = buildPaginator({
