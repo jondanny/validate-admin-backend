@@ -40,7 +40,7 @@ export class CreateUserValidationDto {
   @Validate(TicketProviderExistsValidator)
   ticketProviderId: number;
 
-  @ApiProperty({ example: UserStatus.Active, required: true, default: UserStatus.Active })
+  @ApiProperty({ example: UserStatus.Active, required: false, default: UserStatus.Active })
   @IsOptional()
   @IsEnum(UserStatus)
   status: UserStatus;
