@@ -21,6 +21,10 @@ export class TicketTransferRepository extends Repository<TicketTransfer> {
       queryBuilder.andWhere({ uuid: searchParams.uuid });
     }
 
+    if ('ticketProviderId' in searchParams) {
+      queryBuilder.andWhere({ ticketProviderId: searchParams.ticketProviderId });
+    }
+
     const paginator = buildPaginator({
       entity: TicketTransfer,
       alias: 'ticket_transfer',
