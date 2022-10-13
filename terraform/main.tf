@@ -39,3 +39,11 @@ module "admin_backend_ecs" {
   admin_backend_erc_url = module.ecr_repository.admin_backend_erc_url
   secret_manager_id = module.secrets_manager.aws_secret_manager_id
 }
+
+module "kafka_ui_ecs" {
+  source = "./modules/aws_ecs_kafka_ui"
+
+  depends_on = [module.secrets_manager]
+
+  secret_manager_id = module.secrets_manager.aws_secret_manager_id
+}
