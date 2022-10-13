@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne, JoinColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { TicketTransferStatus } from './ticket-transfer.types';
 import { TicketProvider } from '@src/ticket-provider/ticket-provider.entity';
@@ -46,8 +46,10 @@ export class TicketTransfer {
   ticket: Ticket;
 
   @OneToOne(() => User, (user) => user.ticketTransfersFrom)
+  @JoinColumn({ name: 'user_id_from', referencedColumnName: 'id' })
   userFrom: User;
 
   @OneToOne(() => User, (user) => user.ticketTransfersTo)
+  @JoinColumn({ name: 'user_id_to', referencedColumnName: 'id' })
   userTo: User;
 }
