@@ -171,19 +171,4 @@ describe('Ticket Provider (e2e)', () => {
         expect(response.status).toBe(HttpStatus.OK);
       });
   });
-
-  it(`should delete a ticket provider by id`, async () => {
-    const admin = await AdminFactory.create();
-    const token = testHelper.setAuthenticatedAdmin(admin);
-
-    const ticketProvider = await TicketProviderFactory.create();
-
-    await request(app.getHttpServer())
-      .delete(`/api/v1/ticket-providers/${ticketProvider.id}`)
-      .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${token}`)
-      .then((response) => {
-        expect(response.status).toBe(HttpStatus.OK);
-      });
-  });
 });

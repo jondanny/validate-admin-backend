@@ -19,7 +19,7 @@ export class TicketProviderEncryptionKeyController {
   @Get(':version/:ticketProviderId')
   async findOne(
     @Param('version', ParseIntPipe) version: number,
-    @Param('version', ParseIntPipe) ticketProviderId: number,
+    @Param('ticketProviderId', ParseIntPipe) ticketProviderId: number,
   ): Promise<TicketProviderEncryptionKey> {
     const encryptionKey = await this.ticketProviderEncryptionKeyService.findByVersion(version, ticketProviderId);
 

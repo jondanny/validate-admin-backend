@@ -3,7 +3,7 @@ import { TicketProviderApiToken } from '@src/ticket-provider-api-token/ticket-pr
 import { Ticket } from '@src/ticket/ticket.entity';
 import { User } from '@src/user/user.entity';
 import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn, JoinColumn, OneToMany } from 'typeorm';
-import { TicketProviderStatus } from './ticket-provider.types';
+import { TicketProviderStatus, TicketProviderUserIdentifier } from './ticket-provider.types';
 
 @Entity('ticket_provider')
 export class TicketProvider {
@@ -34,9 +34,13 @@ export class TicketProvider {
   @Column({ type: 'datetime', nullable: false })
   updatedAt: Date;
 
-  @ApiProperty({ description: 'Date when Ticket provider was deleted', required: true })
-  @DeleteDateColumn({ type: 'datetime', nullable: true })
-  deletedAt?: Date;
+  @ApiProperty({
+    description: `Ticket provider's user unique identifier`,
+    example: TicketProviderUserIdentifier.PhoneNumber,
+    required: true,
+  })
+  @Column({ type: 'enum', nullable: false, enum: TicketProviderUserIdentifier })
+  userIdentifier: TicketProviderUserIdentifier;
 
   @OneToMany(() => TicketProviderApiToken, (ticketProviderApiToken) => ticketProviderApiToken.ticketProvider)
   @JoinColumn({ name: 'id', referencedColumnName: 'ticket_provider_id' })

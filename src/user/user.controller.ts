@@ -54,11 +54,4 @@ export class UserController {
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findById(id);
   }
-  @ApiOperation({ description: `Delete user` })
-  @ApiResponse(ApiResponseHelper.success(Event, HttpStatus.CREATED))
-  @ApiResponse(ApiResponseHelper.validationErrors(['Validation failed (numeric string is expected)']))
-  @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number) {
-    return this.userService.remove(id);
-  }
 }
