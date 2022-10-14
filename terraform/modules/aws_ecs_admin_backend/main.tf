@@ -2,6 +2,11 @@ data "aws_secretsmanager_secret_version" "current" {
   secret_id = var.secret_manager_id
 }
 
+data "aws_ecr_image" "admin_backend_image" {
+  repository_name = "admin_backend"
+  image_tag       = "latest"
+}
+
 locals {
   env_vars = [
     for k, v in jsondecode(data.aws_secretsmanager_secret_version.current.secret_string) : { name = k, value = v }
@@ -80,7 +85,7 @@ resource "aws_ecs_task_definition" "admin_backend" {
       environment : local.env_vars,
       memory : 384
       essential : true,
-      image : "${var.admin_backend_erc_url}:latest",
+      image : "${var.admin_backend_erc_url}@${data.aws_ecr_image.admin_backend_image.image_digest}",
       name : "admin-backend",
       portMappings : [
         {
