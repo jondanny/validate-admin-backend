@@ -2,16 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { TicketProvider } from '@src/ticket-provider/ticket-provider.entity';
 import { TicketTransfer } from '@src/ticket-transfer/ticket-transfer.entity';
 import { User } from '@src/user/user.entity';
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  Generated,
-  DeleteDateColumn,
-  ManyToOne,
-  OneToMany,
-  JoinColumn,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { TicketStatus } from './ticket.types';
 
 @Entity('ticket')
@@ -58,6 +49,15 @@ export class Ticket {
   @ApiProperty({ description: 'Ticket status', enum: TicketStatus, required: true })
   @Column({ type: 'varchar', nullable: false, enum: TicketStatus })
   status: TicketStatus;
+
+  @ApiProperty({
+    description: 'Ticket creation transaction hash',
+    example: '0xeBA05C5521a3B81e23d15ae9B2d07524BC453561',
+    required: false,
+    maximum: 66,
+  })
+  @Column({ type: 'varchar', nullable: true, length: 66 })
+  transactionHash: string;
 
   @ApiProperty({ description: 'Date when the Ticket  was created', required: true })
   @Column({ type: 'datetime', nullable: false })

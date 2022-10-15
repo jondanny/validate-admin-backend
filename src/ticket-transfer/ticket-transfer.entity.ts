@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToOne, JoinColumn } from 'typeorm';
-import { Exclude } from 'class-transformer';
 import { TicketTransferStatus } from './ticket-transfer.types';
 import { TicketProvider } from '@src/ticket-provider/ticket-provider.entity';
 import { User } from '@src/user/user.entity';
@@ -41,6 +40,15 @@ export class TicketTransfer {
 
   @ManyToOne(() => TicketProvider, (ticketProvider) => ticketProvider.apiTokens)
   ticketProvider: TicketProvider;
+
+  @ApiProperty({
+    description: 'Ticket creation transaction hash',
+    example: '0xeBA05C5521a3B81e23d15ae9B2d07524BC453561',
+    required: false,
+    maximum: 66,
+  })
+  @Column({ type: 'varchar', nullable: true, length: 66 })
+  transactionHash: string;
 
   @ManyToOne(() => Ticket, (ticket) => ticket.transfers)
   ticket: Ticket;

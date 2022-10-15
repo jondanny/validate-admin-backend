@@ -10,6 +10,7 @@ export class UserFactory {
     user.phoneNumber = faker.phone.number('+1907#######').toString();
     user.walletAddress = faker.finance.bitcoinAddress();
     user.ticketProviderId = Math.floor(Math.random() * 100);
+    user.photoUrl = faker.internet.url();
     const userRepo = AppDataSource.manager.getRepository(User);
 
     return await userRepo.save({ ...data, ...user });
