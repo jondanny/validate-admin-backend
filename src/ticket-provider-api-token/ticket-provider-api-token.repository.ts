@@ -19,6 +19,10 @@ export class TicketProviderApiTokenRepository extends Repository<TicketProviderA
       'ticket_provider',
     );
 
+    if ('ticketProviderId' in searchParams) {
+      queryBuilder.andWhere({ ticketProviderId: searchParams.ticketProviderId });
+    }
+
     const paginator = buildPaginator({
       entity: TicketProviderApiToken,
       alias: 'ticket_provider_api_token',

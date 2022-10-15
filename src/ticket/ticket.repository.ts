@@ -11,7 +11,9 @@ export class TicketRepository extends Repository<Ticket> {
   }
 
   async getPaginatedQueryBuilder(searchParams: TicketFilterDto): Promise<PagingResult<Ticket>> {
-    const queryBuilder = this.createQueryBuilder('ticket');
+    const queryBuilder = this.createQueryBuilder('ticket')
+      .leftJoinAndMapOne('ticket.ticketProvider', 'ticket.ticketProvider', 'ticket_provider')
+      .leftJoinAndMapOne('ticket.user', 'ticket.user', 'user');
 
     if ('ticketProviderId' in searchParams) {
       queryBuilder.andWhere({ ticketProviderId: searchParams.ticketProviderId });

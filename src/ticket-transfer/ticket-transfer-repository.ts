@@ -11,10 +11,18 @@ export class TicketTransferRepository extends Repository<TicketTransfer> {
   }
 
   async getPaginatedQueryBuilder(searchParams: TicketTransferFilterDto): Promise<PagingResult<TicketTransfer>> {
-    const queryBuilder = this.createQueryBuilder('ticket_transfer');
+    const queryBuilder = this.createQueryBuilder('ticket_transfer')
+      .leftJoinAndMapOne('ticket_transfer.ticketProvider', 'ticket_transfer.ticketProvider', 'ticket_provider')
+      .leftJoinAndMapOne('ticket_transfer.userFrom', 'ticket_transfer.userFrom', 'user_from')
+      .leftJoinAndMapOne('ticket_transfer.userTo', 'ticket_transfer.userTo', 'user_to')
+      .leftJoinAndMapOne('ticket_transfer.ticket', 'ticket_transfer.ticket', 'ticket');
 
     if ('uuid' in searchParams) {
       queryBuilder.andWhere({ uuid: searchParams.uuid });
+    }
+
+    if ('ticketProviderId' in searchParams) {
+      queryBuilder.andWhere({ ticketProviderId: searchParams.ticketProviderId });
     }
 
     const paginator = buildPaginator({
