@@ -54,6 +54,9 @@ export class User {
   @Column({ type: 'datetime', nullable: false })
   updatedAt: Date;
 
+  @Column({ type: 'text', nullable: true })
+  errorData: string;
+
   @ManyToOne(() => TicketProvider, (ticketProvider) => ticketProvider.users)
   ticketProvider: TicketProvider;
 

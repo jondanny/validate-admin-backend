@@ -71,6 +71,9 @@ export class Ticket {
   @DeleteDateColumn({ type: 'datetime', nullable: true })
   deletedAt?: Date;
 
+  @Column({ type: 'text', nullable: true })
+  errorData: string;
+
   @ManyToOne(() => TicketProvider, (ticketProvider) => ticketProvider.apiTokens)
   ticketProvider: TicketProvider;
 

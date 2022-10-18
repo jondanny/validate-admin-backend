@@ -50,6 +50,9 @@ export class TicketTransfer {
   @Column({ type: 'varchar', nullable: true, length: 66 })
   transactionHash: string;
 
+  @Column({ type: 'text', nullable: true })
+  errorData: string;
+
   @ManyToOne(() => Ticket, (ticket) => ticket.transfers)
   ticket: Ticket;
 
