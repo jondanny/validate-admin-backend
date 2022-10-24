@@ -68,7 +68,7 @@ describe('Ticket Provider Api Token (e2e)', () => {
 
     const ticketProvider = await TicketProviderFactory.create();
     const ticketProviderData = {
-      token: faker.lorem.words(3),
+      token: faker.lorem.words(2),
       ticketProviderId: ticketProvider.id,
     };
 

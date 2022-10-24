@@ -5,6 +5,7 @@ import { CreateTicketValidationDto } from './dto/create.ticket.validation.dto';
 import { UpdateTicketValidationDto } from './dto/update.ticket.validation.dto';
 import { TicketFilterDto } from './dto/ticket.filter.dto';
 import { PagingResult } from 'typeorm-cursor-pagination';
+import { TicketStatus } from './ticket.types';
 
 @Injectable()
 export class TicketService {
@@ -26,8 +27,8 @@ export class TicketService {
     return this.ticketRepository.getPaginatedQueryBuilder(searchParams);
   }
 
-  async remove(id: number) {
-    await this.ticketRepository.softDelete({ id });
+  async delete(id: number) {
+    await this.ticketRepository.update({ id }, { status: TicketStatus.Deleted, deletedAt: new Date() });
 
     return;
   }

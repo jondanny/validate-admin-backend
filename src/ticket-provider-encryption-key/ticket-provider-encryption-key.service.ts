@@ -20,7 +20,6 @@ export class TicketProviderEncryptionKeyService {
   async create(
     createTicketProviderEncryptionKeyDto: CreateTicketProviderEncryptionKeyValidationDto,
   ): Promise<TicketProviderEncryptionKey> {
-    console.log(createTicketProviderEncryptionKeyDto.ticketProviderId);
     const currentVersion = await this.ticketProviderEncryptionKeyRepo.getCurrentVersion(
       createTicketProviderEncryptionKeyDto.ticketProviderId,
     );

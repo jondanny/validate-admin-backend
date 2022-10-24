@@ -72,6 +72,7 @@ describe('Ticket Provider (e2e)', () => {
     const ticketProviderData = {
       name: 'Muaaz Tausif',
       email: 'muaaz@gmail.com',
+      securityLevel: 2,
     };
 
     await request(app.getHttpServer())
@@ -134,6 +135,7 @@ describe('Ticket Provider (e2e)', () => {
     const updatedTicketProvider = {
       name: 'Muaaz Tausif',
       email: 'muaaz@gmail.com',
+      securityLevel: ticketProvider.securityLevel === 2 ? 1 : 2,
     };
 
     await request(app.getHttpServer())
