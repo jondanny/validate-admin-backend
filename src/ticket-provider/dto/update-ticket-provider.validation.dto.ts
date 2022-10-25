@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsEmail, IsEnum, IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
-import { TicketProviderStatus } from '../ticket-provider.types';
+import { IsEmail, IsEnum, IsOptional, IsString, MaxLength } from 'class-validator';
+import { TicketProviderSecurityLevel, TicketProviderStatus } from '../ticket-provider.types';
 
 export class UpdateTicketProviderValidationDto {
   @ApiProperty({ example: 'John Bucks', required: true })
@@ -22,8 +22,8 @@ export class UpdateTicketProviderValidationDto {
   })
   @Type(() => Number)
   @IsOptional()
-  @IsInt()
-  securityLevel: number;
+  @IsEnum(TicketProviderSecurityLevel)
+  securityLevel: TicketProviderSecurityLevel;
 
   @ApiProperty({ example: TicketProviderStatus.Active, required: true })
   @IsOptional()
