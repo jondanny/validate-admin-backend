@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProducerModule } from '@src/producer/producer.module';
+import { TicketProviderEncryptionKeyModule } from '@src/ticket-provider-encryption-key/ticket-provider-encryption-key.module';
 import { TicketProviderModule } from '@src/ticket-provider/ticket-provider.module';
 import { TicketProviderValidator } from '@src/ticket-provider/ticket-provider.validator';
 import { TicketProviderExistsValidator } from '@src/ticket-provider/validators/ticket-provider-exists.validator';
@@ -14,7 +16,13 @@ import { TicketValidator } from './ticket.validator';
 import { TicketExistsValidator } from './validators/ticket-exists-validator';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Ticket]), UserModule, TicketProviderModule],
+  imports: [
+    TypeOrmModule.forFeature([Ticket]),
+    UserModule,
+    TicketProviderModule,
+    ProducerModule,
+    TicketProviderEncryptionKeyModule,
+  ],
   controllers: [TicketController],
   providers: [
     TicketService,

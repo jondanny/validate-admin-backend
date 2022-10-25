@@ -4,3 +4,8 @@ export enum TicketStatus {
   Validated = 'validated',
   Deleted = 'deleted',
 }
+
+export enum TicketEventPattern {
+  Mint = 'web3.nft.mint',
+  Burn = 'web3.nft.burn',
+}
