@@ -26,12 +26,6 @@ export class UserService {
     return this.userRepository.getPaginatedQueryBuilder(searchParams);
   }
 
-  async remove(id: number) {
-    await this.userRepository.softDelete({ id });
-
-    return;
-  }
-
   async findById(id: number): Promise<User> {
     return this.userRepository.findOne({ where: { id } });
   }

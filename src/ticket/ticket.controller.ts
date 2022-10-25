@@ -63,6 +63,6 @@ export class TicketController {
   @ApiResponse(ApiResponseHelper.validationErrors(['Validation failed (uuid is expected)']))
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number) {
-    return this.ticketService.remove(id);
+    return this.ticketService.delete(id);
   }
 }

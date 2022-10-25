@@ -72,6 +72,7 @@ describe('Ticket Provider (e2e)', () => {
     const ticketProviderData = {
       name: 'Muaaz Tausif',
       email: 'muaaz@gmail.com',
+      securityLevel: 2,
     };
 
     await request(app.getHttpServer())
@@ -134,6 +135,7 @@ describe('Ticket Provider (e2e)', () => {
     const updatedTicketProvider = {
       name: 'Muaaz Tausif',
       email: 'muaaz@gmail.com',
+      securityLevel: ticketProvider.securityLevel === 2 ? 1 : 2,
     };
 
     await request(app.getHttpServer())
@@ -168,21 +170,6 @@ describe('Ticket Provider (e2e)', () => {
             ...ticketProvider,
           }),
         );
-        expect(response.status).toBe(HttpStatus.OK);
-      });
-  });
-
-  it(`should delete a ticket provider by id`, async () => {
-    const admin = await AdminFactory.create();
-    const token = testHelper.setAuthenticatedAdmin(admin);
-
-    const ticketProvider = await TicketProviderFactory.create();
-
-    await request(app.getHttpServer())
-      .delete(`/api/v1/ticket-providers/${ticketProvider.id}`)
-      .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${token}`)
-      .then((response) => {
         expect(response.status).toBe(HttpStatus.OK);
       });
   });

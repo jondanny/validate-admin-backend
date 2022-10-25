@@ -7,6 +7,7 @@ import { AppDataSource } from '@src/config/datasource';
 import { TicketProviderFactory } from '@src/database/factories/ticket-provider.factory';
 import { AdminFactory } from '@src/database/factories/admin.factory';
 import { TestHelper } from '@test/helpers/test.helper';
+import { faker } from '@faker-js/faker';
 
 describe('User (e2e)', () => {
   let app: INestApplication;
@@ -67,6 +68,7 @@ describe('User (e2e)', () => {
             'phoneNumber must be shorter than or equal to 255 characters',
             'ticketProviderId must be an integer number',
             'Ticket provider is not valid.',
+            'photoUrl must be shorter than or equal to 2048 characters',
           ]),
         );
         expect(response.status).toBe(HttpStatus.BAD_REQUEST);
@@ -83,6 +85,7 @@ describe('User (e2e)', () => {
       email: 'muaaz@gmail.com',
       phoneNumber: '+923214757374',
       ticketProviderId: ticketProvider.id,
+      photoUrl: faker.internet.url(),
     };
 
     await request(app.getHttpServer())
@@ -181,21 +184,6 @@ describe('User (e2e)', () => {
             ...user,
           }),
         );
-        expect(response.status).toBe(HttpStatus.OK);
-      });
-  });
-
-  it(`should delete a user by id`, async () => {
-    const admin = await AdminFactory.create();
-    const token = testHelper.setAuthenticatedAdmin(admin);
-
-    const user = await UserFactory.create();
-
-    await request(app.getHttpServer())
-      .delete(`/api/v1/users/${user.id}`)
-      .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${token}`)
-      .then((response) => {
         expect(response.status).toBe(HttpStatus.OK);
       });
   });

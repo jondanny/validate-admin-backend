@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString, MaxLength } from 'class-validator';
+import { IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString, IsUrl, MaxLength } from 'class-validator';
 import { UserStatus } from '../user.types';
 
 export class UpdateUserValidationDto {
@@ -14,6 +14,16 @@ export class UpdateUserValidationDto {
   @IsEmail()
   @MaxLength(255)
   email: string;
+
+  @ApiProperty({
+    example: 'https://img.new.livestream.com/events/00000000004f5dbd/7ffdcd50-2e4b-497a-acca-bc33070c3e12.jpg',
+    required: false,
+    maxLength: 2048,
+  })
+  @IsOptional()
+  @IsUrl()
+  @MaxLength(2048)
+  photoUrl: string;
 
   @ApiProperty({ example: '011-971-55-000-0000', required: true })
   @IsOptional()
