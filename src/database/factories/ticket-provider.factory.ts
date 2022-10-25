@@ -7,6 +7,7 @@ export class TicketProviderFactory {
     const ticketProvider = new TicketProvider();
     ticketProvider.name = faker.name.firstName();
     ticketProvider.email = faker.internet.email();
+    ticketProvider.securityLevel = Math.floor(Math.random() * 2);
     const ticketProviderRepo = AppDataSource.manager.getRepository(TicketProvider);
 
     return await ticketProviderRepo.save({ ...data, ...ticketProvider });
