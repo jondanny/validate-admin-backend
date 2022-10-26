@@ -5,13 +5,23 @@ import { CreateUserValidationDto } from './dto/create-user.validation.dto';
 import { UpdateUserValidationDto } from './dto/update-user.validation.dto';
 import { UserFilterDto } from './dto/user.filter.dto';
 import { PagingResult } from 'typeorm-cursor-pagination';
+import { UserEventPattern } from './user.types';
+import { ProducerService } from '@src/producer/producer.service';
+import { WalletCreateMessage } from './messages/wallet-create.message';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: UserRepository, private readonly producerService: ProducerService) {}
 
   async create(createUserData: CreateUserValidationDto) {
     const user = await this.userRepository.save(createUserData);
+
+    await this.producerService.emit(
+      UserEventPattern.WalletCreate,
+      new WalletCreateMessage({
+        userUuid: user.uuid,
+      }),
+    );
 
     return this.userRepository.findOne({ where: { id: user.id } });
   }
