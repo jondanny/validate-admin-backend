@@ -1,7 +1,7 @@
 import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsInt, IsString, Min, MinLength, validateSync } from 'class-validator';
+import { IsEnum, IsIn, IsInt, IsString, Min, MinLength, validateSync } from 'class-validator';
 
-enum Environment {
+export enum Environment {
   Development = 'development',
   Production = 'production',
   Test = 'test',
@@ -50,6 +50,13 @@ class EnvironmentVariables {
   @IsInt()
   @Min(10)
   TYPEORM_POOL_SIZE: number;
+
+  @IsIn(['true', 'false'])
+  MYSQL_TLS: string;
+
+  @IsString()
+  @MinLength(1)
+  JWT_SECRET: string;
 }
 
 export function validate(config: Record<string, unknown>) {

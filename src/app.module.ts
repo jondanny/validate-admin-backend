@@ -16,6 +16,8 @@ import jwtConfig from './config/jwt.config';
 import { TicketProviderApiTokenModule } from './ticket-provider-api-token/ticket-provider-api-token.module';
 import { TicketTransferModule } from './ticket-transfer/ticket-transfer.module';
 import { TicketProviderEncryptionKeyModule } from './ticket-provider-encryption-key/ticket-provider-encryption-key.module';
+import { ProducerModule } from './producer/producer.module';
+import kafkaConfig from './config/kafka.config';
 
 EnvHelper.verifyNodeEnv();
 
@@ -24,7 +26,7 @@ EnvHelper.verifyNodeEnv();
     ConfigModule.forRoot({
       envFilePath: EnvHelper.getEnvFilePath(),
       isGlobal: true,
-      load: [databaseConfig, jwtConfig],
+      load: [databaseConfig, jwtConfig, kafkaConfig],
       validate: validate,
     }),
     TypeOrmModule.forRootAsync({
@@ -48,6 +50,7 @@ EnvHelper.verifyNodeEnv();
     TicketProviderApiTokenModule,
     TicketTransferModule,
     TicketProviderEncryptionKeyModule,
+    ProducerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
