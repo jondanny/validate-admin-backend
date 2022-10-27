@@ -30,7 +30,7 @@ export class ProducerService implements OnModuleInit, OnModuleDestroy {
       topic: 'healthcheck',
       messages: [
         {
-          value: JSON.stringify({ timestamp: new Date(), client: 'api-gateway' }),
+          value: JSON.stringify({ timestamp: new Date(), client: 'admin-backend' }),
         },
       ],
     });
